@@ -1,12 +1,72 @@
 %!TEX root = ../report.tex
 
 \begin{document}
-    \chapter{Methodology}
+    \chapter{Related Work}
 
-    How you are planning to test/compare/evaluate your research.
-    Criteria used.
 
-    \section{Setup}
+    \section{End-to-End Autonomous Driving}
+    The landscape of end-to-end autonomous driving based approaches can be divided based on the different learning methods used like imitation learning, reinforcement learning, transfer from simulation to real world via generative adversarial learning.
+This section will briefly discuss some of the contribution in the field of end-to-end autonomous driving. A vast amount of work has been carried out via imitation learning in simulated and real wold environments. 
+\par Testing of imitation learning techniques are categorized under closed loop and open-loop evaluation. In open-loop evaluation an autonomous driving model is compared to the recorded expert driving behavior, where the training data is generally split into test and train and the evaluation is carried out on test data. Popular open-loop evaluation metrics are Mean squared error, Mean absolute Error. Whereas in closed loop evaluation the evaluation is carried out in a real driving scenario in which a driving model is made to control the car. Evaluation metrics used for closed loop testing found in the literature are like percentage of autonomy, number of disengagements, number of infractions like collisions, average distance between disengagement and infractions.
 
-    \section{Experimental Design}
+\textbf{({{TODO::: Add a pitcure of closed and open loop evaluation here}})}
+
+\cite{DBLP:journals/corr/BojarskiTDFFGJM16} PilotNet by NVIDIA is one of seminal papers in end-to-end learning for self driving cars. Where a convolutional neural network is trained with images from a single front facing cameras to predict steering commands.  This work made the researchers to believe in the power of end-to-end imitation learning. \cite{DBLP:journals/corr/abs-1711-03938} released a benchmark  called CARLA for testing and developing autonomous driving solutions. \cite{DBLP:journals/corr/abs-1710-02410} proposed a conditional imitation learning based approach where steering and acceleration commands are obtained from the neural network model trained on images from a front facing camera mounted on a toy-truck, navigation commands are treated as intermediate inputs to the network after feature extraction and intensive exploration of closed and open-loop metrics is carried out.
+
+\cite{Sobh2018EndToEndMS} proposed a multi-modal fusion of camera and a lidar BEV segmentation along with navigational commands to predict steering and throttle. This work can be seen as multi-modal extension of conditional imitation learning. Conditional affordance learning \cite{DBLP:journals/corr/abs-1806-06498} introduced the importance of affordances in the environment to take driving decisions. They predicted different kind of affordances like distance to center line of the road, traffic light sign and speed limit affordance with respect to a safe area along with navigational commands to make decisions. Along with that they also developed a control algorithm to take away the jerky car motions for real time applications. 
+
+\cite{DBLP:journals/corr/abs-1804-09364} bridges the gap between end-to-end and modular approaches via abstraction by predicting semantic maps from images and using those semantic maps for obtaining driving commands. \cite{DBLP:journals/corr/abs-1807-03776} proposed principled controllable imitative reinforcement learning which is a combination of imitation and reinforcement learning, where the Deep Deterministic Policy Gradient is used to boost the generalisation of the driving policy. \cite{DBLP:journals/corr/abs-1803-10158} used surround view cameras, vehicle canbus data along with images from open street map to predict driving commands and provided their own large scale dataset called drive 360. They have introduced the usage of LSTM's to capture the temporal information from the scene. Chauffer Net \cite{DBLP:journals/corr/abs-1812-03079} used top down representation of the scene obtained from a perception stack to predict trajectories of the ego vehicle and those trajectories are processed by planner module to give driving commands. 
+
+\cite{DBLP:journals/corr/abs-1905-12887} conducted controlled experiments to show that explicit intermediate visual representation play a major role in predicting actions. \cite{DBLP:journals/corr/abs-1906-03199} proposed a multi-modal conditional imitation learning approach where they used monocular and depth images along with speed measurements to predict actions. \cite{DBLP:journals/corr/abs-1903-10995} proposed a way to learn accurate and comfortable human like driving  using adversary learning. \cite{DBLP:journals/corr/abs-1912-00177} proposed an approach based on conditional imitation learning using images from multiple views, where each image is passed through a CNN based feature extraction module and fused. Those fused features and navigational commands are used to predict driving commands. They have used the intermediate features to predict semantic segmentation, monocular depth and optical flow. 
+
+
+\cite{DBLP:journals/corr/abs-1904-08980} explored the limitations of conditional imitation leaning regarding data set biases, training instability and the ability of the learned driving policy to not perform well in unseen environments. \cite{DBLP:journals/corr/abs-2101-06679} proposed a neural motion planner to drive autonomously in urban scenarios, which includes traffic-light handling, yielding and interaction with multiple road users. They have used Lidar and Hd maps to produce intermediate representations in the form of 3D object detection and trajectory prediction. \cite{Casas_2021_CVPR} provides a novel idea of map-less driving where they are generating an online top down representation of the scene and not relying on the HD maps. Along with that interpret-able intermediate results are predicted for the dynamic objects in the scene. A motion planner module extracts the features from the previous stage to predict actions. In motion planning module possible trajectories are obtained via dynamic occupancy field based trajectory sampler and all the aggregated features are passed into a cost function to predict a desired vehicle trajectory. 
+
+Recent trends in self driving is moving towards an idea where they have assumed that their perception outputs are giving quite good results. And they are relying on the those perception outputs like 3D object detection, semantic segmentation, monocular depth prediction, monocular BEV segmentation to generate top down representation of the scene not relying on lidar and HD maps. After that a motion planning module is used to make the decisions. The whole pipeline is generally trained in an end-to-end fashion. Lift, Splat Shoot \cite{DBLP:journals/corr/abs-2008-05711} by NVIDIA is a very good example of the same. Recently a company called CommaAI released a device for advance driver assistance system and along with that their software stack is open sourced. The neural network architecture used for driver assistance outputs 10 various outputs like lane-lines, road edges, paths, lead car prediction, pose and various other meta information responsible for driving assistance using only the monocular image captured by a dash cam from the device. 
+
+Even after the vast research in the field of end-to-end autonomous driving we are still far away from achieving full self driving and the approaches still suffer from the problem of causal confusion, generalisation in different scenarios and other challenges as described in section 1.1. Very minimal amount of work has been done which is focused towards task loss balancing, finding an appropriate unified feature extractor. Auxiliary tasks like predicting lane lines, paths, road edges, dynamic objects, monocular depth, BEV semantic segmentation seems to be beneficial for predicting actions.
+
+%--------------------------------------------------%
+    \section{Auxiliary Learning}
+%----------------------------------------------------%
+    \section{Task Loss Balancing}
+%-----------------------------------------------------%
+    \section{Lane Detection in Autonomous Driving}
+    Lane line detection is one of the most fundamental and safety critical task in autonomous driving. The importance of lane line detection varies from ADAS (advanced driver-assistance systems) to powerful autonomy tasks like fusion with HD maps and trajectory planning.
+        %==============================================%
+        \subsection{Monocular 2D Lane Detection}
+        Traditionally lane detection was carried out using hand crafted features. Those approaches have many drawbacks like lack of robustness, only applicable in easy driving scenarios. Recently deep learning techniques has been employed to remove the reliance on the hand crafted features and to extract those features in an end-to-end fashion. The task of lane detection via deep learning is generally considered a dense prediction task of semantic segmentation, where each pixel in an image define a label whether it is a lane or not.  % \cite{DBLP:journals/corr/abs-2008-13719}, \cite{DBLP:journals/corr/abs-1712-06080},% 
+
+Some approaches \cite{DBLP:journals/corr/abs-2005-08630}, \cite{DBLP:journals/corr/abs-2004-11757} employed row-wise classification methods to detect lane lines. In row wise classfication method, an image is divided into a grid and a neural network model predicts the most probable cells which can contain part of the lane lines. Generally a post processing methods is used initially to obtain lane lines like clustering.
+
+Several methods has been proposed to capture the rich context of the scene via multitask learning like \cite{inbook} and it has been proven that these methods lead to gain in the performance but it comes with it cons like multi task learning based approaches require extra annotations and large inference times. Some knowledge and attention distillation based approaches have also been proposed to tackle the aforementioned challenges like \cite{DBLP:journals/corr/abs-1908-00821}. 
+
+Thus, 2D lane detection requires to capture rich context from the scene, as in most of the scenarios we need to face challenging situations where there are no lane markings, lanes markings are occluded by the objects or extreme lightning and weather conditions. Thus thus we need to counter the biggest problem of missing visual cues in the scene, maintaining the real time applicability of the solution. Below we have selected some effective approaches which are trying to solve the missing vision cue problem by the means we have discussed above.   
+
+\textbf{TODO::: ADD the Table with the table with the selected 2d approaches here}
+
+From the table above we can see that the row wise classification based methods are better in terms of accuracy and inference time, but we speculate that segmentation based selected above are mainly using ResNet\cite{} based architectures for initial feature extraction. So there can be a possibility of extracting even richer context from the scene via some attention based techniques like \cite{} (SAN) \cite{} (SeNet). Moreover this work mainly relies on detecting 2d lanes via semantic segmentation which facilitates our 3D lane detection approach which will be described in further sections. 
+
+So in general 2d lane detection algorithms take an RGB image from a camera mounted on autonomous vehicle, and provides set of lines on that image. Those lines are projection of 3D lane lines on the image. As both input and output are represented in the image space that is why such approaches are called 2D. These approaches assumes that the road plane is flat and in scenarios where the roads are with different alleviation, there exists a need to obtain 3D points of the lanes to perform accurate motion planning.
+        
+        \subsection{2D Lane Detection Datasets}
+        
+        %==============================================%
+        \subsection{Monocular 3D Lane Detection}
+        Monocular 3D lane detection system provides real world 3D coordinates of the lane lines with respect to a camera coordinate system. This field is quite new and some efforts have been recently done in exploring this task. 
+ 
+The most basic way to lift the 2d lane lines to 3D is using Inverse perspective mapping. IPM is a homographic transformation which warps a perspective image to birds eye view (BEV). But the main problem with IPM is that it assumes flat ground followed by a static and well calibrated camera, where as in real world scenarios the roads are rarely flat. One possible way to predict 3D lanes might be via predicting monocular depth maps of the scene and associate each point of the lane line with depth. Although such solution can be resource hungry we need a light weight and real-time working solution. Apart from that monocular 3D lane detection has a relationship with other tasks like monocular 3D object detection, Monocular BEV segmentation in terms to recover 3D information of the scene using a monocular image.
+\cite{DBLP:journals/corr/abs-1802-05591} is a 2D lane detection approach and many of its idea formed a corner stone for the existing 3D lane detection based approaches. The authors have proposed a lightweight network called H-Net to predict the homo-graphic transformation directly from the image. They took two basic assumptions in their approach that every lane line can be represented by a 3rd order polynomial and lane lines are on a flat road. 
+
+        
+ \begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{images/lanenet.png}
+    \caption{Pipeline of \cite{DBLP:journals/corr/abs-1802-05591}}
+    \end{figure}
+
+
+\subsubsection{Anchor Based Approaches}
+\subsubsection{Anchor Less Approaches}
+\subsection{3D Lane Detection Datasets}
 \end{document}
