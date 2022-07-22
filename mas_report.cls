@@ -150,7 +150,7 @@ not set. Please fix this.}
     \else
     \begin{minipage}{0.4\textwidth}
         \centering
-	   \includegraphics[height=1.3cm]{\@thirdpartylogo}
+	   \includegraphics[height=3cm]{\@thirdpartylogo}
     \end{minipage}
 
     \fi%

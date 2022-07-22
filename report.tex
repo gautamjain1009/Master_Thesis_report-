@@ -28,7 +28,7 @@
 }
 \date{August 2022}
 
-% \thirdpartylogo{path/to/your/image}
+\thirdpartylogo{images/uni_tartu_logo.png}
 
 % Uncomment this to update the pdf metadata
 % \subject{LaTeX testing}
@@ -78,13 +78,24 @@
 
 \pagestyle{mainmatter}
 
+%-------------------------------------------------------------------------------
 \subfile{chapters/ch01_introduction}
-\subfile{chapters/ch02_stateoftheart}
-\subfile{chapters/ch03_methodology}
-\subfile{chapters/ch04_solution}
-\subfile{chapters/ch05_evaluation}
+
+%-------------------------------------------------------------------------------
+
+\subfile{chapters/ch02_theoretical_background}
+
+%-------------------------------------------------------------------------------
+\subfile{chapters/ch03_related_work}
+%-------------------------------------------------------------------------------
+\subfile{chapters/ch04_3dlanedetection}
+%-------------------------------------------------------------------------------
+\subfile{chapters/ch05_aux3dnet}
+%-------------------------------------------------------------------------------
 \subfile{chapters/ch06_results}
+%-------------------------------------------------------------------------------
 \subfile{chapters/ch07_conclusion}
+%-------------------------------------------------------------------------------
 
 %-------------------------------------------------------------------------------
 %	APPENDICES
