@@ -9,9 +9,13 @@
 This section will briefly discuss some of the contribution in the field of end-to-end autonomous driving. A vast amount of work has been carried out via imitation learning in simulated and real wold environments. 
 \par Testing of imitation learning techniques are categorized under closed loop and open-loop evaluation. In open-loop evaluation an autonomous driving model is compared to the recorded expert driving behavior, where the training data is generally split into test and train and the evaluation is carried out on test data. Popular open-loop evaluation metrics are Mean squared error, Mean absolute Error. Whereas in closed loop evaluation the evaluation is carried out in a real driving scenario in which a driving model is made to control the car. Evaluation metrics used for closed loop testing found in the literature are like percentage of autonomy, number of disengagements, number of infractions like collisions, average distance between disengagement and infractions.
 
-\textbf{({{TODO::: Add a pitcure of closed and open loop evaluation here}})}
+ \begin{figure}[h]
+    \centering
+    \includegraphics[width=12cm, height=4cm]{images/open_closed.png}
+    \caption{Open and closed loop evaluation in end-to-end autonomous driving \cite{DBLP:journals/corr/abs-2003-06404}}
+    \end{figure}
 
-\cite{DBLP:journals/corr/BojarskiTDFFGJM16} PilotNet by NVIDIA is one of seminal papers in end-to-end learning for self driving cars. Where a convolutional neural network is trained with images from a single front facing cameras to predict steering commands.  This work made the researchers to believe in the power of end-to-end imitation learning. \cite{DBLP:journals/corr/abs-1711-03938} released a benchmark  called CARLA for testing and developing autonomous driving solutions. \cite{DBLP:journals/corr/abs-1710-02410} proposed a conditional imitation learning based approach where steering and acceleration commands are obtained from the neural network model trained on images from a front facing camera mounted on a toy-truck, navigation commands are treated as intermediate inputs to the network after feature extraction and intensive exploration of closed and open-loop metrics is carried out.
+\cite{DBLP:journals/corr/BojarskiTDFFGJM16} PilotNet by NVIDIA is one of seminal papers in end-to-end learning for self driving cars. Where a convolutional neural network is trained with images from a single front facing cameras to predict steering commands.  This work made the researchers to believe in the power of end-to-end imitation learning. \cite{DBLP:journals/corr/abs-1711-03938} released a benchmark called CARLA for testing and developing autonomous driving solutions. \cite{DBLP:journals/corr/abs-1710-02410} proposed a conditional imitation learning based approach where steering and acceleration commands are obtained from the neural network model trained on images from a front facing camera mounted on a toy-truck, navigation commands are treated as intermediate inputs to the network after feature extraction and intensive exploration of closed and open-loop metrics is carried out.
 
 \cite{Sobh2018EndToEndMS} proposed a multi-modal fusion of camera and a lidar BEV segmentation along with navigational commands to predict steering and throttle. This work can be seen as multi-modal extension of conditional imitation learning. Conditional affordance learning \cite{DBLP:journals/corr/abs-1806-06498} introduced the importance of affordances in the environment to take driving decisions. They predicted different kind of affordances like distance to center line of the road, traffic light sign and speed limit affordance with respect to a safe area along with navigational commands to make decisions. Along with that they also developed a control algorithm to take away the jerky car motions for real time applications. 
 
@@ -22,7 +26,7 @@ This section will briefly discuss some of the contribution in the field of end-t
 
 \cite{DBLP:journals/corr/abs-1904-08980} explored the limitations of conditional imitation leaning regarding data set biases, training instability and the ability of the learned driving policy to not perform well in unseen environments. \cite{DBLP:journals/corr/abs-2101-06679} proposed a neural motion planner to drive autonomously in urban scenarios, which includes traffic-light handling, yielding and interaction with multiple road users. They have used Lidar and Hd maps to produce intermediate representations in the form of 3D object detection and trajectory prediction. \cite{Casas_2021_CVPR} provides a novel idea of map-less driving where they are generating an online top down representation of the scene and not relying on the HD maps. Along with that interpret-able intermediate results are predicted for the dynamic objects in the scene. A motion planner module extracts the features from the previous stage to predict actions. In motion planning module possible trajectories are obtained via dynamic occupancy field based trajectory sampler and all the aggregated features are passed into a cost function to predict a desired vehicle trajectory. 
 
-Recent trends in self driving is moving towards an idea where they have assumed that their perception outputs are giving quite good results. And they are relying on the those perception outputs like 3D object detection, semantic segmentation, monocular depth prediction, monocular BEV segmentation to generate top down representation of the scene not relying on lidar and HD maps. After that a motion planning module is used to make the decisions. The whole pipeline is generally trained in an end-to-end fashion. Lift, Splat Shoot \cite{DBLP:journals/corr/abs-2008-05711} by NVIDIA is a very good example of the same. Recently a company called CommaAI released a device for advance driver assistance system and along with that their software stack is open sourced. The neural network architecture used for driver assistance outputs 10 various outputs like lane-lines, road edges, paths, lead car prediction, pose and various other meta information responsible for driving assistance using only the monocular image captured by a dash cam from the device. 
+Recent trends in self driving is moving towards an idea where they have assumed that their perception outputs are quite accurate. And they are relying on the those perception outputs like 3D object detection, semantic segmentation, monocular depth prediction, monocular BEV segmentation to generate top down representation of the scene not relying on lidar and HD maps. After that a motion planning module is used to make the decisions. The whole pipeline is generally trained in an end-to-end fashion. Lift, Splat Shoot \cite{DBLP:journals/corr/abs-2008-05711} by NVIDIA is a very good example of the same. Recently a company called CommaAI released a device for advance driver assistance system and along with that their software stack which is open sourced. The neural network architecture used for driver assistance outputs 10 various outputs like lane-lines, road edges, paths, lead car prediction, pose and various other meta information responsible for driving assistance using only the monocular image captured by a dash cam from the device. 
 
 Even after the vast research in the field of end-to-end autonomous driving we are still far away from achieving full self driving and the approaches still suffer from the problem of causal confusion, generalisation in different scenarios and other challenges as described in section 1.1. Very minimal amount of work has been done which is focused towards task loss balancing, finding an appropriate unified feature extractor. Auxiliary tasks like predicting lane lines, paths, road edges, dynamic objects, monocular depth, BEV semantic segmentation seems to be beneficial for predicting actions.
 
@@ -37,9 +41,21 @@ Even after the vast research in the field of end-to-end autonomous driving we ar
         \subsection{Monocular 2D Lane Detection}
         Traditionally lane detection was carried out using hand crafted features. Those approaches have many drawbacks like lack of robustness, only applicable in easy driving scenarios. Recently deep learning techniques has been employed to remove the reliance on the hand crafted features and to extract those features in an end-to-end fashion. 2D lane detection requires to capture rich context from the scene, as in most of the scenarios we need to face challenging situations where there are no lane markings, lanes markings are occluded by the objects or extreme lightning and weather conditions. Thus thus we need to counter the biggest problem of missing visual cues in the scene, maintaining the real time applicability of the solution.
         
-        The task of lane detection via deep learning is generally considered a dense prediction task of semantic segmentation, where each pixel in an image define a label whether it is a lane or not. Semantic segmentation in general is considered as dense prediction task, so to facilitate that we need to increase the effective receptive field. To Support that \cite{DBLP:journals/corr/abs-1712-06080} propsed a feature enhancement module which can be used flexibly after the initial feature encoding in any model and shown to be faster than Deep Lab V3 \cite{DBLP:journals/corr/ChenPSA17} and lesser number of parameters. Following the previous approach RESA \cite{DBLP:journals/corr/abs-2008-13719} proposed a better feature enhancement module and at the stake of less computational cost, resulting in 10 times faster than the predecessor. 
+        The task of lane detection via deep learning is generally considered a dense prediction task of semantic segmentation, where each pixel in an image define a label whether it is a lane or not. Semantic segmentation in general is considered as dense prediction task, so to facilitate that we need to increase the effective receptive field. To Support that \cite{DBLP:journals/corr/abs-1712-06080} proppsed a feature enhancement module which can be used flexibly after the initial feature encoding in any model and shown to be faster than Deep Lab V3 \cite{DBLP:journals/corr/ChenPSA17} and lesser number of parameters. Following the previous approach RESA \cite{DBLP:journals/corr/abs-2008-13719} proposed a better feature enhancement module and at the stake of less computational cost, resulting in 10 times faster than the predecessor. 
         
         As the task of semantic segmentation involves around predicting the accurate class of the pixel, approaches like \cite{https://doi.org/10.48550/arxiv.2010.12035}, \cite{inbook} have shown that predicting a semantic mask does not solve the problem of defining shapes of the lane lines, therefore anchor based and row-wise detection based 2d lane detection methods were proposed.
+        
+         \begin{figure}[h]
+    \centering
+\includegraphics[width=12cm, height=4cm]{images/scnn_module.png}
+    \caption{SCNN: feature enhancement module proposed by  \cite{DBLP:journals/corr/abs-1712-06080}}
+    \end{figure}
+    
+     \begin{figure}[h]
+    \centering
+\includegraphics[width=12cm, height=4cm]{images/resa_module.png}
+    \caption{RESA: feature enhancement module proposed by \cite{DBLP:journals/corr/abs-2008-13719}}
+    \end{figure}
 
  Approaches like \cite{DBLP:journals/corr/abs-2005-08630}, \cite{DBLP:journals/corr/abs-2004-11757} employed row-wise classification methods to detect lane lines. In row wise detection methods, an image is divided into a grids and a neural network model predicts the most probable cells which can contain part of the lane lines. Generally some post processing methods are used to obtain lane lines like clustering. Although row wise classification have proven to better in terms of efficiency and accuracy but these approaches still suffer from instance level discrimination of predicted lane pixels.
  
@@ -51,8 +67,6 @@ Row wise detection based or anchor based methods for 2d lane detection are bette
 
 So in general 2d lane detection algorithms take an RGB image from a camera mounted on autonomous vehicle, and provides set of lines on that image. Those lines are projection of 3D lane lines on the image. As both input and output are represented in the image space that is why such approaches are called 2D. These approaches assumes that the road plane is flat and in scenarios where the roads are with different alleviation, there exists a need to obtain 3D points of the lanes to perform accurate motion planning. This work mainly relies on detecting 2d lanes via semantic segmentation which facilitates our 3D lane detection approach which will be discussed in the further sections. 
         
-        \subsection{2D Lane Detection Datasets}
-        
         %==============================================%
         \subsection{Monocular 3D Lane Detection}
         Monocular 3D lane detection system provides real world 3D coordinates of the lane lines with respect to a camera coordinate system. This field is quite new and some efforts have been recently done in exploring this task. 
@@ -60,7 +74,6 @@ So in general 2d lane detection algorithms take an RGB image from a camera mount
 The most basic way to lift the 2d lane lines to 3D is using Inverse perspective mapping. IPM is a homographic transformation which warps a perspective image to birds eye view (BEV). But the main problem with IPM is that it assumes flat ground followed by a static and well calibrated camera, where as in real world scenarios the roads are rarely flat. One possible way to predict 3D lanes might be via predicting monocular depth maps of the scene and associate each point of the lane line with depth. Although such solution can be resource hungry we need a light weight and real-time working solution. Apart from that monocular 3D lane detection has a relationship with other tasks like monocular 3D object detection, Monocular BEV segmentation in terms to recover 3D information of the scene using a monocular image.
 \cite{DBLP:journals/corr/abs-1802-05591} is a 2D lane detection approach and many of its idea formed a corner stone for the existing 3D lane detection based approaches. The authors have proposed a lightweight network called H-Net to predict the homo-graphic transformation directly from the image. They took two basic assumptions in their approach that every lane line can be represented by a 3rd order polynomial and lane lines are on a flat road. 
 
-        
  \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{images/lanenet.png}
@@ -68,7 +81,63 @@ The most basic way to lift the 2d lane lines to 3D is using Inverse perspective 
     \end{figure}
 
 
-\subsubsection{Anchor Based Approaches}
-\subsubsection{Anchor Less Approaches}
-\subsection{3D Lane Detection Datasets}
+The most seminal paper in the field of 3D lane detection is \cite{DBLP:journals/corr/abs-1811-10203} like \cite{DBLP:journals/corr/abs-1802-05591} they have not taken any flat ground assumption, the architecture in the approach is basically divided into two pathways one for predicting the transformation from image plane to 3D road plane. This pathway predicts camera height and pitch from the road which basically determines the transformation. The other pathway is responsible for converting monocular image from image space to Birds Eye VIew (BEV) space, where they have employed an anchor based lane prediction head. The main limitation of this approach is that it can handle only scenarios with parallel lane-lines and fail at the scenarios when lane-lines are perpendicular to the ego vehicle. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{images/3dlanenet.png}
+    \caption{\cite{DBLP:journals/corr/abs-1811-10203} 3D LanetNet network architecture}
+    \end{figure}
+
+\cite{DBLP:journals/corr/abs-2011-01535} handles the limitations of \cite{DBLP:journals/corr/abs-1811-10203} and like its predecessor it has also similar dual pathways but the only difference is the representation of the lane lines. It breaks the BEV image into grids called image tiles.
+Every lane segment passing through each tile is approximated semi-locally and constructed into a full lane curve, moreover this is the first work where they have also introduced estimation of uncertainty for 3d lane detection. This paper also claims that it is able to handle the scenarios with different topologies as their method encode 3d lane information with anchor-less 3D lane representation. 
+
+ \begin{figure}[h]
+    \centering
+    \includegraphics[width=12cm, height=4cm]{images/3DLaneNET++.png}
+    \caption{Network architecture of Semi-local 3D LaneNet \cite{DBLP:journals/corr/abs-2011-01535}}
+    \end{figure}
+
+\cite{guo2020gen} also proposes a two stage method to predict 3D lanes. In the first stage they perform 2D lane detection and in the next stage they lift the 2d lane detection results to 3D using a different network which they have called as 3D-GeoNet. The main important thing about this approach is the first stage can easily be replaced by better 2D lane detection algorithms and. They have treated lane detection and prediction of 3D geometry as different tasks thus making their approach even more flexible and moreover the second stage is trained with synthetic 3D lane detection dataset that they have released along with the original implementation of the approach. 
+
+ \begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{images/GenLaneNET.png}
+    \caption{Network architecture of Gen-LaneNet \cite{guo2020gen}}
+    \end{figure}
+
+The authors have also pointed out more limitations of the \cite{DBLP:journals/corr/abs-1811-10203} that in case of a scenario when a ego vehicle is moving uphill the top view projection does not align with IPM transformed projection, thus the IPM transformed features are warped which they call it is as virtual top view. All the 3D lane line ground-truths are corrected to virtual top view before feeding it into the model. Despite of many improvements this approach has used anchor based representation of the lane lines thus they suffer from the same limitations as \cite{DBLP:journals/corr/abs-1811-10203}. 
+
+All the previous mentioned approaches for 3D lane detection are relying on accurate camera poses in terms of camera height and camera pitch. \cite{DBLP:journals/corr/abs-2112-15351} are performing the task of camera pose prediction and determining 3d lane lines. They have divided their network to two stages. The image input to the network is processed by convolution neural network followed by a transformer-encoder inspired by LSTR \cite{LSTR}. Instead of representing the lanes in the form of anchors the lanes are represented in the form of multi order polynomial and their coefficients are regressed in the training. They have explored the fact of predicting camera pose, as the previous work fails on high speed and high undulations. Though this approach performs better in terms of metrics but they are still unable to take into account the problem of detecting 3d lane lines for complex topologies. 
+
+ \begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{images/3dLane_camera_pose_pipeline.png}
+    \caption{Pipeline of \cite{DBLP:journals/corr/abs-2112-15351}}
+    \end{figure}
+
+Following the previous work \cite{9506296} proposed a dual attention pipeline for 3d lane detection. Their dual attention is itself a flexible contribution which can be replaced in any other approach. The main essence of dual attention module is to extract more meaningful global information. In this approach the output feature map from the segmented BEV is further processed via fully connected layers to find the correction between the lane anchors in horizontal and longitudinal fashion this extraction lane-to-lane and pixel wise attention. The global attention map or features are used for predicting 3d lanes. Thought their dual attention module is interesting but it is utilizing anchors to represent 3D lane lines thus this approach will suffer from the same limitations as we have discussed above. 
+
+ \begin{figure}[h]
+    \centering
+\includegraphics[width=12cm, height=4cm]{images/dual_attention_pipeline.png}
+    \caption{Dual attention mechanism  proposed by  \cite{9506296}}
+    \end{figure}
+
+Following the footsteps of \cite{DBLP:journals/corr/abs-2011-01535}, \cite{yan2022once} proposed a lane detector where lanes are not represented as anchors. Instead of using BEV for encoding 3d lane information the scene their method relies on the 2D camera image and its intrinsics to detect the 3D lane line points. Utilizing the power of anchor-less based 3d lane detectors that they are able to detect different lane topology, they have used a dual branched pipeline where one branch is used for detecting binary lanes from the encoded features from a input image. For the backbone they have used the SegFormer \cite{DBLP:journals/corr/abs-2105-15203}. The second paths regresses directly the 2d coordinates of the lane points along with the depth associated with them. The predicted coordinates are in camera image plane which can be taken to real world via using camera geometry. For generating the ground-truth they have proposed an automatic annotation pipeline using lidar and camera as major sensors.
+
+\begin{figure}[h]
+    \centering
+\includegraphics[width=12cm, height=4cm]{images/once_pipeline.png}
+    \caption{Extrinsic free anchor-less pipeline proposed by \cite{yan2022once}}
+    \end{figure}
+
+In this work we propose to take the best of the both the worlds and counter the limitations of the previous approaches by using virtual top view and decoupled pipeline proposed by \cite{guo2020gen} and using the tile representation opted by \cite{DBLP:journals/corr/abs-2011-01535}. We will also explore the flexibility of the dual pathway in terms of using more complex lane segmentation solution.
+
+\subsection{Lane Detection Datasets}
+
+\subsubsection{2D Lane Detection Datasets}
+As a lot of work has been conducted in the field of 2d lane detection therefore a lot of 2d lane detection data-sets exits. But in this work we will discuss only the prominent ones which are generally used by the 3D lane detection approaches for training the intermediate part of their pipline. \cite{} TuSimple is one of the most basic datasets used by the 2d lane detection approaches to validate their pipeline. The dataset consists of driving scenarios on highway with stable lightning conditions. Where as CULane \cite{} is quite challenging dataset with varying conditions 
+
+
 \end{document}
