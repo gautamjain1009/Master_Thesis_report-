@@ -134,7 +134,7 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
                 \begin{figure}[h]
     \centering
     \includegraphics[width=10cm, height =4cm]{images/hough1.png}
-    \caption{Representation of a line in (a) cartesian space (b) mc space}
+    \caption{Representation of a line}
     \end{figure}
     
     Similarly we can say that a point in cartesian space can be represented as infinite lines in mc space as infinite lines can pass from a point in cartesian space. So, Hough transform does the same converting points in cartesian space to lines in mc space. Therefore for an edge image, where the pixels are non black we can draw lines in mc space. Some lines will intersect at a particular point and that intersection point is this slope and intercept of those lines. 
@@ -142,7 +142,7 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
                     \begin{figure}[h]
     \centering
     \includegraphics[width=10cm, height =4cm]{images/hough2.png}
-    \caption{Representation of a point in (a) mc space (b) cartesian space}
+    \caption{Representation of a point}
     \end{figure}
     
     From the pixels points to line in mc space, when more than one lines intersects in mc space it means that those pixels belong to the same line in cartesian space and that line's parameter is represented by the intersecting point. 
@@ -150,8 +150,26 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
                  \begin{figure}[h]
     \centering
     \includegraphics[width=10cm, height =4cm]{images/hough3.png}
-    \caption{Representation of a point in (a) mc space (b) cartesian space}
+    \caption{Representation of a set of points}
     \end{figure}
+    
+    We can not represent lines with slope and intercept in Hough space algorithmically, as in the case of vertical lines the slope can be undefined or infinity. Therefore the straight line is represented in the form of polar coordinates, $\rho = xcos(\theta) + ysin(\theta) $ is the equation of normal line where $\rho$ is the length of the normal line and $\theta$ is the angle between normal line and the x axis. 
+    
+    \begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm, height =4cm]{images/hough4.png}
+    \caption{Representation of line in the normal form}
+    \end{figure}
+    
+    Every point is represented by cosine curves in the Hough space, thus we can map all the edge points from an edge image to Hough space. If two points lie on the same edge or line their cosine curves will intersect at some $(\rho,\theta)$ pair, as mentioned above the Hough transform algorithm will find the $(\rho,\theta)$ pair for which the number of intersections are larger than a certain threshold. \newline 
+    
+    
+    \underline{\textbf{Algorithm:}} \newline
+    \textbf{1.} Assuming origin of the image is at the top left corner and decide the range of $\rho$ and $\phi$. In most of the cases $\theta:[0, 180]$ degrees and $\rho:[-d,d]$ where d is length of the diagonal of the edge image. \newline
+    \textbf{2.} Initialize an array called as accumulator with dimension $(number of rhos, and number of thetas)$ which are sampled over a specific interval. \newline
+    \textbf{3.} Edge detection is carried out on the image before performing Hough transform.\newline 
+    \textbf{4.} Loop through the pixels of edge image and check if that pixel is edge pixel. In case, if it is an edge pixel we loop thought all the values of $\theta$ and obtaining the corresponding $\rho$. For every $(\rho, \theta)$ pair while looping we increment the value in the accumulator at the particular index of $\rho$ and $\theta$. \newline
+    \textbf{5.} To obtain the detected lines, the valued in the accumulator are checked and for a respective $(\rho,\theta)$ pair the value is greater than some threshold it is considered as a line, where $(\rho,\theta)$ pair can be mapped to Cartesian space.  
     
     \section{A Brief Guide to Convolutional Neural Networks}
     
