@@ -78,7 +78,7 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
                                                               [ipm_{width}, ipm_{height}]$
 
      \textbf{Step: B Obtain homography from ipm to ground} \newline
-     As mentioned above you need four or more points to calculate the homography matrix, via OpenCV you can obtain this by using cv2.getPerspectiveTransform\footnote{https://docs.opencv.org/3.4/da/d6e/tutorial_py_geometric_transformations.html} function. 
+     As mentioned above you need four or more points to calculate the homography matrix, via OpenCV you can obtain this by using cv2.getPerspectiveTransform\footnote{\url{https://docs.opencv.org/3.4/da/d6e/tutorial_py_geometric_transformations.html}} function. 
      Thus, obtaining $T^{ground}_{ipm}$
      
      \textbf{Step: C Obtain homography from ground to image} \newline
@@ -103,7 +103,7 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
     $T^{ipm}_{image}$ = $(T^{ipm}_{image})^{-1}$
     \end{center}
     
-    Using cv2.warpPerspective\footnote{https://docs.opencv.org/3.4/da/d6e/tutorial_py_geometric_transformations.html} again we can obtain our transformed image in BEV. 
+    Using cv2.warpPerspective\footnote{\url{https://docs.opencv.org/3.4/da/d6e/tutorial_py_geometric_transformations.html}} again we can obtain our transformed image in BEV. 
     
     
 \begin{figure}[h]
@@ -125,7 +125,7 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
     
     \section{Hough Transform}
     
-    The Hough transform is a feature extraction technique used in image analysis, computer vision, and digital image processing. The purpose of the technique is to find imperfect instances of objects within a certain class of shapes by a voting procedure. \footnote{https://en.wikipedia.org/wiki/Hough_transform}
+    The Hough transform is a feature extraction technique used in image analysis, computer vision, and digital image processing. The purpose of the technique is to find imperfect instances of objects within a certain class of shapes by a voting procedure. \footnote{\url{https://en.wikipedia.org/wiki/Hough_transform}}
     
     Generally Hough transform is used for detecting lines in an image but it is also applicable to detecting circles and ellipsoidal curves in an image. Hough transform is applied on images after edge detection is performed on it. Edge detection is a technique which identifies boundaries or edges of certain objects in the image on the basis of change in brightness across the pixels. Let's assume we are trying to find lines in an image, in that sense edges are sequence of pixels with certain slope and intercepts. To detect lines in this image we need to loop through all the pixels with same intercept and slope, this is where Hough transforms comes handy. In simple words Hough transform helps to find lines by giving weightage to the pixels that are already in a line. 
     
@@ -172,6 +172,28 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
     \textbf{5.} To obtain the detected lines, the valued in the accumulator are checked and for a respective $(\rho,\theta)$ pair the value is greater than some threshold it is considered as a line, where $(\rho,\theta)$ pair can be mapped to Cartesian space.  
     
     \section{A Brief Guide to Convolutional Neural Networks}
+    Before the deep learning went mainstream we used handcrafted feature extractors to extract features form the data to achieve certain tasks related to machine learning.
+    After that convolutional neural networks became bread and butter for every task related to deep learning where images were involved. 
+    
+    Convolution are generally represented as affine transformations where an input matrix is multiplied by another matrix to obtain output and usually a bias vector b is added to the output before it is passed through a non linear function. Like every affine transformation CNN's are invariant to translation, scale and rotation that makes them a really powerful feature extractors. CNN's extract hierarchical features from image patches, the initial layers generally extract low level features, where as the later layers extract mid to high level features. In this section we will briefly explain the arithmetic's behind the working of a CNN in different settings. 
+    
+    Data like images, sound clips can be represented in a similar structure which can be processed by CNN's for feature extraction. Such kinda data is in the form of multi-dimensional arrays where the ordering of axes plays an important role in terms of information representation, and CNN's preserve this ordering and performs affine transformation sparsely while reusing the parameters to generate the output with the help of discrete convolutions. 
+     \begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm, height =6cm]{images/discrete_cnn.png}
+    \caption{Computing output values of a discrete convolution \cite{https://doi.org/10.48550/arxiv.1603.07285}}
+    \end{figure}
+    
+    Single or more than one kernel or filter generally slides across the all the input to generate the output. At each location element wise multiplication and addition is performed to generate an output popularly called as output feature maps and the same goes for the scenario when we have a multidimensional input feature map. 
+    
+    Pooling is also one of the main building blocks of CNN's which are generally used to reduce the spatial size in keeping the useful extracted information. Pooling also uses sliding window protocol on the input or feature maps. It can be seen as same as discreet convolution, the only difference is that no linear combination of values takes place, they are replaced by taking average over all the element wise product values or sometimes maximum value is taken. 
+    \begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm, height =6cm]{images/pooling_cnn.png}
+    \caption{3x3 average pooling operation on 5x5 input \cite{https://doi.org/10.48550/arxiv.1603.07285}}
+    \end{figure}
+    
+    Now we will dive into the arithmetic's related to convolution.
     
     \section{Semantic Segmentation}
     
