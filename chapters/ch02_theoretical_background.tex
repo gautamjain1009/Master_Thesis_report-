@@ -193,8 +193,73 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
     \caption{3x3 average pooling operation on 5x5 input \cite{https://doi.org/10.48550/arxiv.1603.07285}}
     \end{figure}
     
-    Now we will dive into the arithmetic's related to convolution.
+    Now we will dive into the arithmetic's related to convolutions and see how to calculate the output size in
+    in different settings. Normal convolution operation on an input or different feature maps can be represented in different variations depending on the stride of the kernel, padding of the input. 
     
+    \textbf{Example 1: No padding, unit strides}   
+    
+      \begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm, height =2cm]{images/cnn_case1.png}
+    \caption{$3x3$ kernel convolves over a $4x4$ input using unit strides \cite{https://doi.org/10.48550/arxiv.1603.07285}}
+    \end{figure}
+    
+    \textbf{Example 2: Full padding padding, unit strides} 
+    In this case the size of output feature map after convolving the kernel. 
+      \begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm, height =2cm]{images/cnn_case4.png}
+    \caption{Computing output values of a discrete convolution \cite{https://doi.org/10.48550/arxiv.1603.07285}}
+    \end{figure}
+    
+    \textbf{Example 3: Half padding, unit strides}
+    In this case the size of input after convolving the kernel remains same. 
+      \begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm, height =2cm]{images/cnn_case3.png}
+    \caption{Computing output values of a discrete convolution \cite{https://doi.org/10.48550/arxiv.1603.07285}}
+    \end{figure}
+    
+    
+    \textbf{Example 4: No padding, non unit strides}
+    In this case the kernel will shift with a stride of 2 pixels in both height and width axes while convolving. 
+      \begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm, height =2cm]{images/cnn_case5.png}
+    \caption{Computing output values of a discrete convolution \cite{https://doi.org/10.48550/arxiv.1603.07285}}
+    \end{figure}
+     
+   There can be more variants depending on the choice of stride and padding. kernel size. Assuming the input feature map to be square the resulting spatial size of the output feature map after convolution can be calculated by:
+   \begin{center}
+      output size = (input size - kernel size + 2 * padding / stride) + 1
+   \end{center}
+   
+   
+   
+   Sometimes there are cases when we want to up-sample the feature map thus increasing the spatial size of the feature map, such kinds of convolutions are generally used in the decoding layers of the auto-encoder to map the feature maps to high dimensional space such convolutions are called as transposed convolutions or deconvolutions. It can be seen as mathematically opposite to the normal convolution. Deconvolution can be performed by padding the feature map or sometimes zeros are added in the middle of the inputs along with padding to increase the spatial size of the feature map.
+   
+    \textbf{Example 1:  2x2 padding,  unit strides}
+     \begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm, height =2cm]{images/tranpose_case1.png}
+    \caption{ Transpose of convolving $3x3$ kernel on $4x4$ input using unit strides \cite{https://doi.org/10.48550/arxiv.1603.07285}}
+    \end{figure}
+    
+    \textbf{Example 2: 2x2 padding, dilation, unit strides}
+     \begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm, height =2cm]{images/transpose_case2.png}
+    \caption{Transpose of convolving $3x3$ kernel on $5x5$ input with 2x2 strides \cite{https://doi.org/10.48550/arxiv.1603.07285}}
+    \end{figure}
+    
+    More variants of the transpose convolutions can be obtained with different settings of padding, dilation, stride and kernel size. Assuming the input feature map to be square the resulting spatial size of the output feature map after deconvolution can be calculated by:
+    
+       \begin{center}\newline
+       output size = (input size - 1) * stride - 2 * padding + (kernel size - 1) +1
+   \end{center}
+    
+
     \section{Semantic Segmentation}
+    
     
 \end{document}
