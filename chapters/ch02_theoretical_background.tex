@@ -204,20 +204,20 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
     \caption{$3x3$ kernel convolves over a $4x4$ input using unit strides \cite{https://doi.org/10.48550/arxiv.1603.07285}}
     \end{figure}
     
-    \textbf{Example 2: Full padding padding, unit strides} 
-    In this case the size of output feature map after convolving the kernel. 
+    \textbf{Example 2: Full padding (2x2), unit strides} 
+    In this case the size of output feature map after convolving the kernel is bigger than the input feature map.
       \begin{figure}[h]
     \centering
     \includegraphics[width=10cm, height =2cm]{images/cnn_case4.png}
-    \caption{Computing output values of a discrete convolution \cite{https://doi.org/10.48550/arxiv.1603.07285}}
+    \caption{$3x3$ kernel convolves over a $5x5$ input with $2x2$ padding and unit strides \cite{https://doi.org/10.48550/arxiv.1603.07285}}
     \end{figure}
     
-    \textbf{Example 3: Half padding, unit strides}
+    \textbf{Example 3: Half padding (1x1), unit strides}
     In this case the size of input after convolving the kernel remains same. 
       \begin{figure}[h]
     \centering
     \includegraphics[width=10cm, height =2cm]{images/cnn_case3.png}
-    \caption{Computing output values of a discrete convolution \cite{https://doi.org/10.48550/arxiv.1603.07285}}
+    \caption{$3x3$ kenel convolves over $5x5$ input with $1x1$ padding and unit strides \cite{https://doi.org/10.48550/arxiv.1603.07285}}
     \end{figure}
     
     
@@ -226,7 +226,7 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
       \begin{figure}[h]
     \centering
     \includegraphics[width=10cm, height =2cm]{images/cnn_case5.png}
-    \caption{Computing output values of a discrete convolution \cite{https://doi.org/10.48550/arxiv.1603.07285}}
+    \caption{Convolving $3x3$ kernel over $5x5$ input with no padding and $2x2$ strides \cite{https://doi.org/10.48550/arxiv.1603.07285}}
     \end{figure}
      
    There can be more variants depending on the choice of stride and padding. kernel size. Assuming the input feature map to be square the resulting spatial size of the output feature map after convolution can be calculated by:
@@ -236,8 +236,8 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
    
    
    
-   Sometimes there are cases when we want to up-sample the feature map thus increasing the spatial size of the feature map, such kinds of convolutions are generally used in the decoding layers of the auto-encoder to map the feature maps to high dimensional space such convolutions are called as transposed convolutions or deconvolutions. It can be seen as mathematically opposite to the normal convolution. Deconvolution can be performed by padding the feature map or sometimes zeros are added in the middle of the inputs along with padding to increase the spatial size of the feature map.
-   
+   Sometimes there are cases when we want to up-sample the feature map thus increasing the spatial size of the feature map, such kinds of convolutions are generally used in the decoding layers of the auto-encoder to map the feature maps to high dimensional space such convolutions are called as transposed convolutions or deconvolutions. It can be seen as mathematically opposite to the normal convolution. Deconvolution can be performed by padding the feature map or sometimes zeros are added in the middle of the inputs along with padding to increase the spatial size of the feature map. \newline
+  
     \textbf{Example 1:  2x2 padding,  unit strides}
      \begin{figure}[h]
     \centering
@@ -259,7 +259,34 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
    \end{center}
     
 
-    \section{Semantic Segmentation}
+    \section{Scene Understaing via Semantic Segmentation}
+    In this section we will briefly introduce the task of semantic segmentation with respect to the deep learning side of the problem and the role it plays in scene understanding in autonomous driving. Semantic segmentation is a dense prediction task where we predict label for each pixel in the image, unlike classification where we assign one label for the whole image.
     
+    In simple words semantic segmentaion performs three steps: \newline
+    1. Classification : classify an object in the image  \newline
+    2. Localization : find the location of the object in the image \newline
+    3. Segmentation : divide the pixels into groups and obtaining a mask around those pixels groups 
     
+     When CNN's are used for object recognition task they decrease the size of the feature maps from initial layer to deeper layers and semantic segmentation is a dense prediction task, means the spatial size of the output should be same as the input, it makes this task a little bit challenging. In most of the cases direct upsampling of the mid level feature maps leads to coarse results and thus to obtain fine results we need to increase the effective receptive field which is generally done via artous convolutions which enhance the receptive field. 
+     
+     There exists three variants segmentation: \newline
+     1. Semantic Segmentation \newline
+     2. Instance Segmentation \newline
+     3. Panoptic Segmentation \newline 
+     
+     To understand conceptually the above mentioned types, let's first understand briefly the  2D object detection. The task of object detection generally is to localise the object in the image and draw bounding boxes around it and every box generally have a confidence score. So, the object detection pipeline outputs object class, it's bounding box location with respect to a coordinate system and a confidence score. 
+     
+     Instance segmentation takes the task of object to next level, alternatively predicting the class labels of the object, it's bounding box location and confidence score. The algorithm also predicts the pixels which belongs to that instance or object too which is generally represented as 2d array with values either 0 or 1 called as binary mask. 
+     
+     Similarly semantic segmentation does not care about the individual instance, it is responsible for only obtaining class labels for each pixel even if it belongs to the same instances, thus individual instance are not accounted in this case. 
+
+     Where as panoptic segmentation can be seen as the combination of instance and semantic segmentation where the algorithm predicts class labels for every pixel along with identifying the individual instances it belongs too. 
+    \newline
+    The ability of this method to obtain the meaningful semantic information from the scene like pedestrians, cars, cycles and more, makes it highly applicable for scene understanding and which further facilitates the prediction of action decisions for an autonomous driving car.  
+    
+     \begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth, height =10cm]{images/seg_image101.png}
+    \caption{ Semantic segmentation, instance segmentation and panoptic segmentation of a driving scene \cite{8570006}}
+    \end{figure}
 \end{document}
