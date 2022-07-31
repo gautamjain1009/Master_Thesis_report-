@@ -276,7 +276,7 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
      
      To understand conceptually the above mentioned types, let's first understand briefly the  2D object detection. The task of object detection generally is to localise the object in the image and draw bounding boxes around it and every box generally have a confidence score. So, the object detection pipeline outputs object class, it's bounding box location with respect to a coordinate system and a confidence score. 
      
-     Instance segmentation takes the task of object to next level, alternatively predicting the class labels of the object, it's bounding box location and confidence score. The algorithm also predicts the pixels which belongs to that instance or object too which is generally represented as 2d array with values either 0 or 1 called as binary mask. 
+     Instance segmentation takes the task of object detection to next level, alternatively predicting the class labels of the object, it's bounding box location and confidence score. The algorithm also predicts the pixels which belongs to that instance or object which is generally represented as 2d array with values either 0 or 1 called as binary mask. 
      
      Similarly semantic segmentation does not care about the individual instance, it is responsible for only obtaining class labels for each pixel even if it belongs to the same instances, thus individual instance are not accounted in this case. 
 
