@@ -23,7 +23,7 @@ $\left(\begin{array}{c}X \\ Y \\ Z \\ 1 \end{array}\right) \rightarrow \left(\be
 
 \end{center}
     
-The above equation can be represented as  $X^{‘} = PX $. Where X is the real world point represented in the homogenous coordinates as $(X, Y, Z, 1)^{T}$ and P is a $3x4$ homogeneous matrix called camera projection matrix. P in this case can be rewritten as $diag(f,f,1) [I|0]$, where diag(f,f,1) is a $3x3$ matrix and $[I|0]$ is a zero column vector. 
+The above equation can be represented as  $X^{‘} = PX $. Where X is the real world point represented in the homogeneous coordinates as $(X, Y, Z, 1)^{T}$ and P is a $3x4$ homogeneous matrix called camera projection matrix. P in this case can be rewritten as $diag(f,f,1) [I|0]$, where diag(f,f,1) is a $3x3$ matrix and $[I|0]$ is a zero column vector. 
 Generally the origin of coordinated is not at the optical center, there exists some offset. So the mapping in that case will change: 
 \begin{center}
 $(X,Y,Z)^{T} \rightarrow (fX/Z + p_{x}, fY/Z + p_{y})^{T}$
@@ -47,7 +47,7 @@ And $ K =  \begin{bmatrix}f & &p_{x} \\  &f &p_{y}  \\   & &1    \end{bmatrix}$
 $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0 &1 \end{bmatrix}$
     \end{center}
     
-    So we can summarize this mapping from real world to camera plane, first the real world coordinates are transferred to camera coordinate frame via extrinsic matrix and the resulting points in camera coordinate frames are projected to image plane using camera matrix or instrinsic matrix. 
+    So we can summarize this mapping from real world to camera plane, first the real world coordinates are transferred to camera coordinate frame via extrinsic matrix and the resulting points in camera coordinate frames are projected to image plane using camera matrix or intrinsic matrix. 
         \begin{figure}[h]
     \centering
     \includegraphics[width=8cm, height =4cm]{images/extrinsic_intrinsic.png}
@@ -59,7 +59,7 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
     \section{Inverse Perspective Mapping (IPM)}
      In computer vision inverse perspective transformation can be seen as a scenario where we obtain birds-eye-view image of the scene using front-facing camera image. To understand how the inverse perspective mapping we need to build some basic concepts about camera geometry which we discussed in the last section, homography and 2D perspective transformation. In autonomous driving IPM can be seen as an alternative way to feed the network with extra information about scene and it is explored in tasks like lane detection, BEV segmentation, path planning and more. 
      
-     By definition homography is the way we can transform one projective plane to another plane using a transformation matrix called \textbf{H} and in this work we have used homography based IPM to take the front facing camera image to BEV. These transformation generally comes under the category of perspective transformation. Popularly there exists two types of transformations in projective geometry called as affine and perspective transformation. Example of affine transformation are translation, rotation, dilation. Affine transformations generally maps lines to lines, points to points and prallell lines stay parallel. Where as in the case of perspective transformation can hold only geometrical properties like will remain line and it retains col-linearity of points. Under perspective transformation two parallel lines can not stay parallel and they generally meet at a point at infinity which is called as vanishing point. The pin hole camera model that we have discussed above follows the principal of perspecitve transformation of a real world point to the camera image plane and the camera matrix that we have discussed is basically a homography matrix. Generally this camera matrix is obtained via association of 4 or more same points in the multiple images taken from same camera and this task is called camera calibration. 
+     By definition homography is the way we can transform one projective plane to another plane using a transformation matrix called \textbf{H} and in this work we have used homography based IPM to take the front facing camera image to BEV. These transformation generally comes under the category of perspective transformation. Popularly there exists two types of transformations in projective geometry called as affine and perspective transformation. Example of affine transformation are translation, rotation, dilation. Affine transformations generally maps lines to lines, points to points and parallel lines stay parallel. Where as in the case of perspective transformation can hold only geometrical properties like will remain line and it retains col-linearity of points. Under perspective transformation two parallel lines can not stay parallel and they generally meet at a point at infinity which is called as vanishing point. The pin hole camera model that we have discussed above follows the principal of perspective transformation of a real world point to the camera image plane and the camera matrix that we have discussed is basically a homography matrix. Generally this camera matrix is obtained via association of 4 or more same points in the multiple images taken from same camera and this task is called camera calibration. 
      
             \begin{figure}[h]
     \centering
@@ -72,7 +72,7 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
      \textbf{Step: A Define a top view region \newline} 
      First step for IPM is to define a top view region and we want this plane to be consistent with the moving vehicle. The origin of top view region plane is at the top left corner. Generally we start with deciding the width and height of this plane this defining the resolution per pixel. 
      
-     Let $(ipm_{width}, ipm_{height} = 256, 416)$ and top view region edge points to be $[-10, 103], [10, 103], [-10, 3], [10, 3]$. Similary the IPM boundry points can be represented as $[0, 0],
+     Let $(ipm_{width}, ipm_{height} = 256, 416)$ and top view region edge points to be $[-10, 103], [10, 103], [-10, 3], [10, 3]$. Similarly the IPM boundry points can be represented as $[0, 0],
                                                               [ipm_{width}, 0],
                                                               [0, ipm_{height}-1],
                                                               [ipm_{width}, ipm_{height}]$
@@ -127,7 +127,7 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
     
     The Hough transform is a feature extraction technique used in image analysis, computer vision, and digital image processing. The purpose of the technique is to find imperfect instances of objects within a certain class of shapes by a voting procedure. \footnote{\url{https://en.wikipedia.org/wiki/Hough_transform}}
     
-    Generally Hough transform is used for detecting lines in an image but it is also applicable to detecting circles and ellipsoidal curves in an image. Hough transform is applied on images after edge detection is performed on it. Edge detection is a technique which identifies boundaries or edges of certain objects in the image on the basis of change in brightness across the pixels. Let's assume we are trying to find lines in an image, in that sense edges are sequence of pixels with certain slope and intercepts. To detect lines in this image we need to loop through all the pixels with same intercept and slope, this is where Hough transforms comes handy. In simple words Hough transform helps to find lines by giving weightage to the pixels that are already in a line. 
+    Generally Hough transform is used for detecting lines in an image but it is also applicable to detecting circles and ellipsoidal curves in an image. Hough transform is applied on images after edge detection is performed on it. Edge detection is a technique which identifies boundaries or edges of certain objects in the image on the basis of change in brightness across the pixels. Let's assume we are trying to find lines in an image, in that sense edges are sequence of pixels with certain slope and intercepts. To detect lines in this image we need to loop through all the pixels with same intercept and slope, this is where Hough transforms comes handy. In simple words Hough transform helps to find lines by giving weight-age to the pixels that are already in a line. 
     
     Before indulging into the workings of the Hough transform, we need to understand the basic idea how the Hough transform works. A line can be represented by minimal two points and it has an intercept and a slope. Similarly a line can also be represented by a single point in mc space.
     
@@ -137,7 +137,7 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
     \caption{Representation of a line}
     \end{figure}
     
-    Similarly we can say that a point in cartesian space can be represented as infinite lines in mc space as infinite lines can pass from a point in cartesian space. So, Hough transform does the same converting points in cartesian space to lines in mc space. Therefore for an edge image, where the pixels are non black we can draw lines in mc space. Some lines will intersect at a particular point and that intersection point is this slope and intercept of those lines. 
+    Similarly we can say that a point in Cartesian space can be represented as infinite lines in mc space as infinite lines can pass from a point in Cartesian space. So, Hough transform does the same converting points in Cartesian space to lines in mc space. Therefore for an edge image, where the pixels are non black we can draw lines in mc space. Some lines will intersect at a particular point and that intersection point is this slope and intercept of those lines. 
     
                     \begin{figure}[h]
     \centering
@@ -145,7 +145,7 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
     \caption{Representation of a point}
     \end{figure}
     
-    From the pixels points to line in mc space, when more than one lines intersects in mc space it means that those pixels belong to the same line in cartesian space and that line's parameter is represented by the intersecting point. 
+    From the pixels points to line in mc space, when more than one lines intersects in mc space it means that those pixels belong to the same line in Cartesian space and that line's parameter is represented by the intersecting point. 
     
                  \begin{figure}[h]
     \centering
@@ -217,7 +217,7 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
       \begin{figure}[h]
     \centering
     \includegraphics[width=10cm, height =2cm]{images/cnn_case3.png}
-    \caption{$3x3$ kenel convolves over $5x5$ input with $1x1$ padding and unit strides \cite{https://doi.org/10.48550/arxiv.1603.07285}}
+    \caption{$3x3$ kernel convolves over $5x5$ input with $1x1$ padding and unit strides \cite{https://doi.org/10.48550/arxiv.1603.07285}}
     \end{figure}
     
     
@@ -259,15 +259,15 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
    \end{center}
     
 
-    \section{Scene Understaing via Semantic Segmentation}
+    \section{Scene Understating via Semantic Segmentation}
     In this section we will briefly introduce the task of semantic segmentation with respect to the deep learning side of the problem and the role it plays in scene understanding in autonomous driving. Semantic segmentation is a dense prediction task where we predict label for each pixel in the image, unlike classification where we assign one label for the whole image.
     
-    In simple words semantic segmentaion performs three steps: \newline
+    In simple words semantic segmentation performs three steps: \newline
     1. Classification : classify an object in the image  \newline
     2. Localization : find the location of the object in the image \newline
     3. Segmentation : divide the pixels into groups and obtaining a mask around those pixels groups 
     
-     When CNN's are used for object recognition task they decrease the size of the feature maps from initial layer to deeper layers and semantic segmentation is a dense prediction task, means the spatial size of the output should be same as the input, it makes this task a little bit challenging. In most of the cases direct upsampling of the mid level feature maps leads to coarse results and thus to obtain fine results we need to increase the effective receptive field which is generally done via artous convolutions which enhance the receptive field. 
+     When CNN's are used for object recognition task they decrease the size of the feature maps from initial layer to deeper layers and semantic segmentation is a dense prediction task, means the spatial size of the output should be same as the input, it makes this task a little bit challenging. In most of the cases direct up-sampling of the mid level feature maps leads to coarse results and thus to obtain fine results we need to increase the effective receptive field which is generally done via artous convolutions which enhance the receptive field. 
      
      There exists three variants segmentation: \newline
      1. Semantic Segmentation \newline
