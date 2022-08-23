@@ -3,48 +3,117 @@
 \begin{document}
     \chapter{Results}
     
-    \begin{table}[!ht]
+    \textbf{Remember to dicuss your 2D Lane detection evaluation and how you have chosen to work with particular ones}
+    
+    \begin{table}[h!]
+    \caption{Cross entropy}
     \centering
     \begin{tabular}{|l|l|l|}
     \hline
         \textbf{Method} & \textbf{IoU} & \textbf{FPS} \\ \hline
-        SCNN\_Res18\_TuSimple & ~ & ~ \\ \hline
-        RESA\_res18\_TuSimple & ~ & ~ \\ \hline
-        SCNN\_Res50\_CUlane & ~ & ~ \\ \hline
-        RESA\_Res50\_CUlane & ~ & ~ \\ \hline
-        SCNN\_Res18\_sim3d & ~ & ~ \\ \hline
-        RESA\_Res18\_sim3d & ~ & ~ \\ \hline
-        SCNN\_Res50\_sim3d & ~ & ~ \\ \hline
-        SCNN\_Res50\_sim3d & ~ & ~ \\ \hline
+        SCNN(Res18+TuSimple) & 54.81 & $\approx$ 70  \\ \hline
+        RESA(Res18+TuSimple) & 56.73 & $\approx$ 50 \\\hline
+        SCNN(Res18+CUlane) & 38.1 & $\approx$ 70 \\ \hline
+        RESA(Res18+CUlane) & 43.23 &  $\approx$ 45\\\hline
+        SCNN(Res18+sim3d) & 44.12 & $\approx$ 70 \\ \hline
+        RESA(Res18+sim3d) & 71.79 & $\approx$ 45 \\ \hline
+        RESA(Res50+sim3d) & 74.11 & $\approx$ 40 \\ \hline
+        
+    \end{tabular}
+\end{table}
+    
+     \begin{table}[h!]
+    \caption{Focal and Dice loss and analyze the results qualitatively too here all trained on sim3d only trained with egovehicle lanes for segmentation \textbf{Add all the difference in qualitative results and the IOU graph}}
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+        \textbf{Method} & \textbf{IoU} & \textbf{FPS} \\ \hline
+        RESA(Res18+Cross Entropy) & 71.79 & $\approx$ 45 \\ \hline
+        SCNN(Res18+Cross Entropy) & 44.12 & $\approx$ 70  \\ \hline
+        RESA(Res50+Cross Entropy) & 74.11 & $\approx$ 40  \\ \hline
+        RESA(Res18+Focal Loss) & 75.59 & $\approx$ 55 \\\hline
+        RESA(Res18+Dice Loss) & 82.57 & $\approx$ 50 \\\hline
+        RESA(Res50+Dice Loss) & 83.33 & $\approx$ 50 \\\hline
     \end{tabular}
 \end{table}
     
     
+     \begin{table}[h!]
+    \caption{FULL label lane segmentation results with dice and focal loss \textbf{Add all the difference in qualitative results and the IOU graph}}
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+        \textbf{Method} & \textbf{IoU} & \textbf{FPS} \\ \hline
+        SCNN(Res18+Focal Loss) & 44.01 & $\approx$ 70 \\\hline
+        RESA(Res18+Dice Loss) & 86.56 & $\approx$ 55 \\\hline
+        RESA(Res50+Dice Loss) & 86.67 & $\approx$ 50 \\\hline
+    \end{tabular}
+\end{table}
+
     \section{Use case 1}
 
     Describe results and analyse them
     \begin{itemize}
-        \item \textbf{Standard}
+        \item \textbf{Balanced Scenes}
     \end{itemize}
 
-    \begin{table}[!ht]
-    \centering
-    \begin{tabular}{|l|l|l|l|l|l|l|}
+    \begin{table}[htbp]
+    \addtolength{\tabcolsep}{-1pt}
+    \begin{center}
+    \caption{To be filled later}
+    \begin{tabular}{|p{0.3\linewidth}|p{0.1\linewidth}|p{0.1\linewidth}|p{0.1\linewidth}|p{0.1\linewidth}|p{0.1\linewidth}|p{0.1\linewidth}|}
     \hline
         \textbf{Method} & \textbf{AP} & \textbf{F-Score} & \textbf{x error near(m)} & \textbf{x error far(m)} & \textbf{z error near(m)} & \textbf{z error far(m)} \\ \hline
         Gen-LaneNet & 90.1 & 88.1 & 0.061 & 0.496 & 0.012 & 0.214 \\ \hline
-        3D LaneNet & 89.3 & 86.4 & 0.068 & 0.477 & 0.015 & 0.202 \\ \hline
-        CLGo & 91.9 & 94.2 & 0.061 & 0.361 & 0.029 & 0.250 \\ \hline
-        3D-LaneNet(1/att) & 91.0 & 93.2 & 0.082 & 0.439 & 0.011 & 0.242 \\ \hline
-        Gen-LaneNet(1/att) & 90.3 & 92.4 & 0.080 & 0.473 & 0.011 & 0.247 \\ \hline
-        Gen-LaneNet/RESA+Res18 & 91.8 & 89.7 & 0.06 & 0.466 & 0.0114 & 0.24 \\ \hline
-        Gen-LaneNet/RESA+Res50 & 92.2 & 90.2 & 0.06 & 0.461 & 0.0122 & 0.24 \\ \hline
+        3D LaneNet & 89.3 & 86.4 & 0.068 & 0.477 & 0.015 & \textbf{0.202} \\ \hline
+        CLGo & \textbf{94.2} &\textbf{ 91.9} & 0.061 & \textbf{0.361} & 0.029 & 0.250 \\ \hline
+        3D-LaneNet(1/att) &  93.2 & 91.0 & 0.082 & 0.439 & \textbf{0.011} & 0.242 \\ \hline
+        Gen-LaneNet(1/att) & 92.4 & 90.3 & 0.080 & 0.473 & \textbf{0.011} & 0.247 \\ \hline
+        Gen-LaneNet(RESA+Res18) & 91.8 & 89.7 & \textbf{0.06} & 0.466 & 0.0114 & 0.24 \\ \hline
+        Gen-LaneNet(RESA+Res50) & 92.2 & 90.2 &\textbf{ 0.06} & 0.461 & 0.0122 & 0.24 \\ \hline
     \end{tabular}
+    \end{center}
 \end{table}
 
     \begin{itemize}
-        \item \textbf{S}
+        \item \textbf{Rarely Observed}
     \end{itemize}
+    
+        \begin{table}[htbp]
+    \centering
+    \caption{To be filled later}
+    \begin{tabular}{|p{0.3\linewidth}|p{0.1\linewidth}|p{0.1\linewidth}|p{0.1\linewidth}|p{0.1\linewidth}|p{0.1\linewidth}|p{0.1\linewidth}|}
+    \hline
+        \textbf{Method} & \textbf{AP} & \textbf{F-Score} & \textbf{x error near(m)} & \textbf{x error far(m)} & \textbf{z error near(m)} & \textbf{z error far(m)} \\ \hline
+        Gen-LaneNet & 79.0 & 78.0 & 0.139 & 0.903 & 0.030 & 0.539 \\ \hline
+        3D LaneNet & 74.6 & 72.0 & 0.166 & 0.855 & 0.039 &\textbf{ 0.521} \\ \hline
+        CLGo &\textbf{ 88.3} &\textbf{ 86.1} & 0.147 & \textbf{0.735} & 0.071 & 0.609 \\ \hline
+        3D-LaneNet(1/att) & 85.8 & 84.1 & 0.289 & 0.925 &\textbf{ 0.025} & 0.625 \\ \hline
+        Gen-LaneNet(1/att) & 83.2 & 81.7 & 0.283 & 0.915 & 0.028 & 0.653 \\ \hline
+        Gen-LaneNet(RESA+Res18) &  84.9 & 83.2 &\textbf{ 0.135} & 0.886 & 0.0308 & 0.607 \\ \hline
+        Gen-LaneNet(RESA+Res50) & 83.7 & 82.3 & 0.14 & 0.919 & 0.0283 & 0.604 \\ \hline
+    \end{tabular}
+\end{table}
+
+  \begin{itemize}
+        \item \textbf{Visual Variations}
+    \end{itemize}
+    
+        \begin{table}[htbp]
+    \centering
+    \caption{To be filled later}
+    \begin{tabular}{|p{0.3\linewidth}|p{0.1\linewidth}|p{0.1\linewidth}|p{0.1\linewidth}|p{0.1\linewidth}|p{0.1\linewidth}|p{0.1\linewidth}|}
+    \hline
+        \textbf{Method} & \textbf{AP} & \textbf{F-Score} & \textbf{x error near(m)} & \textbf{x error far(m)} & \textbf{z error near(m)} & \textbf{z error far(m)} \\ \hline
+        Gen-LaneNet & 87.2 & 85.3 & 0.074 & 0.538 & 0.015 & 0.232 \\ \hline
+        3D LaneNet & 74.9 & 72.5 & 0.115 & 0.601 & 0.032 & \textbf{0.230} \\ \hline
+        CLGo & 89.2 & 87.3 & 0.084 & \textbf{0.464} & 0.045 & 0.312 \\ \hline
+        3D-LaneNet(1/att) & 87.4 & 85.4 & 0.118 & 0.559 & 0.018 & 0.290 \\ \hline
+        Gen-LaneNet(1/att) & 88.5 & 86.8 & 0.104 & 0.544 & 0.016 & 0.294 \\ \hline
+        Gen-LaneNet(RESA+Res18) & \textbf{ 91.1} &\textbf{ 89.2} & 0.734 & 0.496 & \textbf{0.0134} & 0.259 \\ \hline
+        Gen-LaneNet(RESA+Res50) & 90.7 & 88.8 & \textbf{0.0653} & 0.477 & 0.014 & 0.258 \\ \hline
+    \end{tabular}
+\end{table}
     \section{Use case 2}
 
     \section{Use case 3}
