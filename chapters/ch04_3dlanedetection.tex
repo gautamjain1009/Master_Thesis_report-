@@ -21,7 +21,11 @@
         The task of semantic segmentation is considered as a dense prediction task, as the size of predictions and input remains same. The model predicts for every pixel a class label to which it belongs to. Binary segmentation can be seen as a subset of the task of semantic segmentation where instead of predicting multiple class labels we generally try to predict for the foreground and background. Foreground in our case can be the lane lines and background is the remaining entities in a driving scenario.
         Binary segmentation or semantic segmentation in general takes as an input a RGB image which can be of shape $(N,C,H,W)$ where $N$ is the batch size, $C$ the number of channels ie. in our case 3 representing $R, G, B$ and $H,W$ is the spatial size of the respective image. In case of binary segmentaiton the predictions are generally of the shape of $N,H,W$ or $N,C,H,W$ which later decides the choice of objective function used to train the pipeline. Binary Cross Entropy(BCE) is used in the case when the output is of the shape of $N,H,W$ as in the later case Cross Entropy is utilized.
         
-        \textbf{Data Flow for calculating loss here}
+                 \begin{figure}[h]
+    \centering
+    \includegraphics[width=13cm]{images/2d_dataflow_loss_computation.jpg}
+    \caption{Data flow for loss computation for 2D binary lane segmentation pipeline. $w$ and $h$ are spatial width and height of the image tensors and $n_{c}$ represents the number of classes.}
+    \end{figure}
         
         \subsubsection{Cross Entropy Loss}
         Cross Entropy is generally employed to measure the difference between two probability distributions.
