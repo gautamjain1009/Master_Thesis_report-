@@ -17,13 +17,47 @@
         
         Figure 4.4 represents the pseudo architecture for the 2D binary lane detection module. This is an auto-encoder based pipeline where we have used ResNet \cite{DBLP:journals/corr/HeZRS15} based network for initial feature encoding and later utilizing the feature aggregation modules proposed by SCNN\cite{pan2018SCNN} and RESA\cite{DBLP:journals/corr/abs-2008-13719}. In the end we have experimented with two types of decoders for upsampling the extracted features as it is a dense prediction task we need the output to be of the same spatial size as input. Initially we used the a simple decoder proposed by SCNN\cite{pan2018SCNN} which uses bi-linear interpolation to upsample the feature maps, later we experimented with the Bilateral Upsampling Decoder (BUSD) proposed by RESA\cite{DBLP:journals/corr/abs-2008-13719}. So we trained our 2d binary lane segmentation pipeline using mix and match of the above mentioned encoder, decoder and feature aggregation modules.
         
-        \subsection{Loss Function}
+        \subsection{Loss Functions Used}
+        The task of semantic segmentation is considered as a dense prediction task, as the size of predictions and input remains same. The model predicts for every pixel a class label to which it belongs to. Binary segmentation can be seen as a subset of the task of semantic segmentation where instead of predicting multiple class labels we generally try to predict for the foreground and background. Foreground in our case can be the lane lines and background is the remaining entities in a driving scenario.
+        Binary segmentation or semantic segmentation in general takes as an input a RGB image which can be of shape $(N,C,H,W)$ where $N$ is the batch size, $C$ the number of channels ie. in our case 3 representing $R, G, B$ and $H,W$ is the spatial size of the respective image. In case of binary segmentaiton the predictions are generally of the shape of $N,H,W$ or $N,C,H,W$ which later decides the choice of objective function used to train the pipeline. Binary Cross Entropy(BCE) is used in the case when the output is of the shape of $N,H,W$ as in the later case Cross Entropy is utilized.
         
-        \subsection{Datasets Used}
-        We utilized two datasets for training the 2D binary lane segmentation pipeline. The first dataset we used is TuSimple lane detection benchmark\cite{Tusimple}, as discussed in section 3.3.3 it is a simple dataset consists of normal highway driving. On the other hand we also use a more complex and much larger dataset compared to the previous one like CULane\cite{pan2018SCNN} which contains 55 hours of driving and contains different driving scenarios as discussed in section 3.3.3.    
+        \textbf{Data Flow for calculating loss here}
+        
+        \subsubsection{Cross Entropy Loss}
+        Cross Entropy is generally employed to measure the difference between two probability distributions.
+        \begin{equation}
+        L_{CCE} = -\frac{1}{N}\sum_{i=1}^{N} \sum^{M}_{j=1}y_{i,j}\cdot log(p_{i,j})
+        \end{equation}
+        
+        where $p_{i,j}$ is the prediction for each class and $y_{i,j}$ is the target values for each class. $y_{i,j}$ is represented as one-hot encoded matrix of ground-truth labels which is represented in the form of different channels per each class. The rows and columns of each channels is either 0 or 1 depending upon the location of pixel-wise class labels. 
+       
+        \subsubsection{Focal Loss}
+        Focal loss can be sen as an extened version of cross entropy where the objective function will penalise the hard samples than easy samples and to achieved that a regulating term is added to handle the class imbalance problem.
+        \begin{equation}
+            Cross Entropy = - \sum^{i=n}_{i=1}Y_{i}log_{b}(p_{i})
+        \end{equation}
+        where $Y$ is the ground-truth label and $p$ is the predicted probability.
+        
+        \begin{equation}
+            Focal Loss = - \sum^{i=n}_{i=1} \alpha_{i}(1-p_{i})^{\gamma} log_{b}(p_{i})
+        \end{equation}
+        
+         when $\gamma = 0$, Focal Loss is equal to Cross Entropy Loss. 
+        
+        \subsubsection{Dice Loss}
+        Dice Similarity Coefficient(DSC) is a popular loss function which is used for the task of semantic segmentation to counter the problem of class imbalance. DSC is quite similar to Intersection over Union(IoU). Like IoU, Dice Similarity Coefficient(DSC) is used to compare the predicted segmentation mask and the corresponding ground truth. In simpler terms DSC is 2 times the area of overlap  between segmentation mask and ground-truth mask divided by the total number of pixels in both the prediction and ground-truth mask.
+        
+        \begin{equation}
+            DC = \frac{2TP}{2TP + FP + FN} = \frac{2|X \cap Y|}{|X| + |Y|}
+        \end{equation}
+    where $TP$ are the true positivesm $FP$ false positives and $FN$ false negatives.  
+        
+        \begin{equation}
+            L_{dice} = 1 - DSC
+        \end{equation}
         
         \subsection{Evaluation Metrics}
-        Both the utilized datasets have their own evaluation metrics and even the authors have released the script for bench-marking the results and the evaluation criteria proposed by them only relies on penalizing the predictions on the basis of predicted 2d lane line points. As in our case we are not interested in predicting lane line points rather our 3D lane detection module relies on 2d binary lane segmentation masks as intermediate output. So we have used IoU (Intersection-over-union) or Jaccard Index to evaluate the trained models. IoU is a commonly used evaluation metric for image segmentation which is really effective. In Simple terms IoU calculated the area of overlap between the predicted segmentation mask and the ground truth divided by the union of the predicted segmentation mask and ground truth.
+        All the utilized datasets have their own evaluation metrics and even the authors have released the script for bench-marking the results and the evaluation criteria proposed by them only relies on penalizing the predictions on the basis of predicted 2d lane line points. As in our case we are not interested in predicting lane line points rather our 3D lane detection module relies on 2d binary lane segmentation masks as intermediate output. So we have used IoU (Intersection-over-union) or Jaccard Index to evaluate the trained models. IoU is a commonly used evaluation metric for image segmentation which is really effective. In Simple terms IoU calculated the area of overlap between the predicted segmentation mask and the ground truth divided by the union of the predicted segmentation mask and ground truth.
         
          \begin{figure}[h]
     \centering
@@ -33,6 +67,8 @@
     \footnotetext{\url{https://towardsdatascience.com/intersection-over-union-iou-calculation-for-evaluating-an-image-segmentation-model-8b22e2e84686}}
         
         \subsection{Implementation Details}
+        We utilized three datasets for training the 2D binary lane segmentation pipeline. The first dataset is called TuSimple lane detection benchmark\cite{Tusimple}, as discussed in section 3.3.3 it is a simple dataset consists of normal highway driving. On the other hand we also use a more complex and much larger dataset compared to the previous one like CULane\cite{pan2018SCNN} which contains 55 hours of driving and contains different driving scenarios as discussed in section 3.3.3. We have also trained the 2D binay lane segmentation with Apollo Synthetic dataset\cite{guo2020gen} by utilizing the semantic segmentation labels provided in the dataset.   
+        
         \textbf{<TO BE FILLED LATER, talk about the image resize, hyper parameter used>}
         
     %---------------------------------------------------------------- After here must start 3d lane detection section%   
@@ -60,14 +96,14 @@
     \end{figure}
 
     Therefore we can obtain a relationship between the points from 3d world to virtual top view as :
-    \begin{center}
-        $\frac{h-z}{h} =\frac{x}{\overline{x}}=\frac{y}{\overline{y}}$ 
-    \end{center}
+    \begin{equation}
+        \frac{h-z}{h} =\frac{x}{\overline{x}}=\frac{y}{\overline{y}} 
+    \end{equation}
     
     using the above formulation we can represent this transformation from 3D world space to virtual top view as \textbf{$\overline{P} = GP$}, where \textbf{G} is the transformation matrix. Similarly a point \textbf{$\overline{P}$} can be projected onto the image plane as $\textbf{p}$ using homomgraphy which is also discussed in section 2.2. and this can be represented as: 
-    \begin{center}
-       $\begin{bmatrix}\overline{u}  \\\overline{v} \\ \overline{z}\end{bmatrix} = \begin{bmatrix} f_{x} & 0& c_{x}  \\0 &f_{x} & c_{y} \\ 0 & 0 & 1     \end{bmatrix}\begin{bmatrix} 1 & 0& 0  \\0 &cos(\phi+ \frac{\theta}{2}) & h \\ 0 &cos(\phi+ \frac{\theta}{2}) & 0     \end{bmatrix}\begin{bmatrix}\overline{X}  \\\overline{Y} \\ 1\end{bmatrix}$
-    \end{center}
+    \begin{equation}
+       \begin{bmatrix}\overline{u}  \\\overline{v} \\ \overline{z}\end{bmatrix} = \begin{bmatrix} f_{x} & 0& c_{x}  \\0 &f_{x} & c_{y} \\ 0 & 0 & 1     \end{bmatrix}\begin{bmatrix} 1 & 0& 0  \\0 &cos(\phi+ \frac{\theta}{2}) & h \\ 0 &cos(\phi+ \frac{\theta}{2}) & 0     \end{bmatrix}\begin{bmatrix}\overline{X}  \\\overline{Y} \\ 1\end{bmatrix}
+    \end{equation}
 
     Here, \textbf{$\widetilde{p}$} $= (\widetilde{u}, \widetilde{v}, \widetilde{z})$ and  \textbf{$\widetilde{P}$} $= (\overline{X},\overline{Y},1 )$ are represented in the form of homogeneous coordinates, therefore $u = \frac{\widetilde{u}} {\widetilde{z}} $ and $v = \frac{\widetilde{v}} {\widetilde{z}} $. Similar as above this can be represented as \textbf{$\widetilde{p} = H\widetilde{P}$}, where H is the homography transformation matrix. 
     

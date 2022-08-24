@@ -1,10 +1,20 @@
 %!TEX root = ../report.tex
 
 \begin{document}
-    \chapter{Results}
+    \chapter{Evaluation and Results}
     
     \textbf{Remember to dicuss your 2D Lane detection evaluation and how you have chosen to work with particular ones}
     
+    
+    
+From the equation \textbf{XXX} Cross entropy aims at reducing the pixel-wise error therefore cross entropy only considers loss locally not globally. Thus the statistical distribution of labels can affect the overall loss. The cases where the occurance of one class overpowers the other this condition is called class imbalance.
+    \textbf{Discuss about the struggles with the dataset and how you have over come it} 
+        
+    \begin{itemize}
+        \item Class imbalance ----->  Class weighting CCE -----> Focal Loss ----> Dice Loss
+    \end{itemize}
+      
+      
     \begin{table}[h!]
     \caption{Cross entropy}
     \centering
@@ -21,7 +31,10 @@
         
     \end{tabular}
 \end{table}
-    
+
+\begin{itemize}
+     \item Discuss here quantativelly qualitatively along with scientific arguments what you have done and how you have improved your results for 2d lane detection (class imbalance).
+\end{itemize}
      \begin{table}[h!]
     \caption{Focal and Dice loss and analyze the results qualitatively too here all trained on sim3d only trained with egovehicle lanes for segmentation \textbf{Add all the difference in qualitative results and the IOU graph}}
     \centering

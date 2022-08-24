@@ -18,22 +18,23 @@
     Considering the central projection of 3D point \txtbf{X} on to the image plane. Let the camera center is at the center of origin of euclidean space. The image plane is at distance $z = f$. Pinhole camera model maps the point  \textbf{X} $ = (X, Y, Z)^{T}$ to the image plane, where a line from point \textbf{X} intersects the image plane at point \textbf{x} and meets the center of projection. This center of projection is also called camera center or optical center. Thus, using the similar triangles we can compute the mapping of $ (X, Y, Z)^{T}$ to $(fX/Z, fY/Z, f)^{T}$ which lies on the image plane. Therefore this projection can be seen as the mapping from $IR^{3}$ to $IR^{2}$ in euclidean space. 
     
     Assuming the world and image points to be homogeneous vectors this mapping can be represented as:
-   \begin{center}
-$\left(\begin{array}{c}X \\ Y \\ Z \\ 1 \end{array}\right) \rightarrow \left(\begin{array}{c} fX \\ fY \\ Z \end{array}\right) = \begin{bmatrix}f & & & 0 \\  &f & & 0  \\   & &1 & 0   \end{bmatrix}\left(\begin{array}{c}X\\ Y  \\Z \\ 1 \end{array}\right)$
+  \begin{equation}
+\left(\begin{array}{c}X \\ Y \\ Z \\ 1 \end{array}\right) \rightarrow \left(\begin{array}{c} fX \\ fY \\ Z \end{array}\right) = \begin{bmatrix}f & & & 0 \\  &f & & 0  \\   & &1 & 0   \end{bmatrix}\left(\begin{array}{c}X\\ Y  \\Z \\ 1 \end{array}\right)
+\end{equation}
 
-\end{center}
     
 The above equation can be represented as  $X^{‘} = PX $. Where X is the real world point represented in the homogeneous coordinates as $(X, Y, Z, 1)^{T}$ and P is a $3x4$ homogeneous matrix called camera projection matrix. P in this case can be rewritten as $diag(f,f,1) [I|0]$, where diag(f,f,1) is a $3x3$ matrix and $[I|0]$ is a zero column vector. 
 Generally the origin of coordinated is not at the optical center, there exists some offset. So the mapping in that case will change: 
-\begin{center}
-$(X,Y,Z)^{T} \rightarrow (fX/Z + p_{x}, fY/Z + p_{y})^{T}$
-\end{center}
+\begin{equation}
+(X,Y,Z)^{T} \rightarrow (fX/Z + p_{x}, fY/Z + p_{y})^{T}
+\end{equation}
  where $(p_{x}, p_{y})^{T}$ are the coordinates of the new optical center. So according to this mapping can be expressed as:
-   \begin{center}
-$\left(\begin{array}{c}X \\ Y \\ Z \\ 1 \end{array}\right) \rightarrow \left(\begin{array}{c} fX + Zp_{x} \\ fY + Zp_{y} \\ Z \end{array}\right) = \begin{bmatrix}f & &p_{x} & 0 \\  &f &p_{y} & 0  \\   & &1 & 0   \end{bmatrix}\left(\begin{array}{c}X\\ Y  \\Z \\ 1 \end{array}\right)$
-
-And $ K =  \begin{bmatrix}f & &p_{x} \\  &f &p_{y}  \\   & &1    \end{bmatrix}$
-\end{center}
+   \begin{equation}
+\left(\begin{array}{c}X \\ Y \\ Z \\ 1 \end{array}\right) \rightarrow \left(\begin{array}{c} fX + Zp_{x} \\ fY + Zp_{y} \\ Z \end{array}\right) = \begin{bmatrix}f & &p_{x} & 0 \\  &f &p_{y} & 0  \\   & &1 & 0   \end{bmatrix}\left(\begin{array}{c}X\\ Y  \\Z \\ 1 \end{array}\right)
+\end{equation}
+\begin{equation}
+And  K =  \begin{bmatrix}f & &p_{x} \\  &f &p_{y}  \\   & &1    \end{bmatrix}
+\end{equation}
  Here K is called camera calibration matrix. The 3D world point is generally in the world coordinate frame and in most of the cases there exists some rotation and translation between the camera coordinate frame and world coordinate frame.
  
     \begin{figure}[h]
@@ -43,9 +44,9 @@ And $ K =  \begin{bmatrix}f & &p_{x} \\  &f &p_{y}  \\   & &1    \end{bmatrix}$
     \end{figure}
     
     This rotation and translation is generally represented as 3x4 matrix, $[R | C ]$ called extrinsic matrix, where $R$ is the rotation matrix and $C$ is the translation matrix. The above derived mapping assumes that the image plane is of similar scale in x and y direction, but in most of the cases it is not true. To counter this problem with the assumption that image coordinates are represented in the form of pixels we will introduce a scale factor here in x and y direction as $m_{x}$ and $m_{y}$ and we further introduce on more factor called skew coefficient $s$ in the cases when x and y axis of camera frames are not perpendicular to each other. Thus the resulting camera matrix can be represented as:
-        \begin{center}
-$K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0 &1 \end{bmatrix}$
-    \end{center}
+        \begin{equation}
+K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0 &1 \end{bmatrix}
+    \end{equation}
     
     So we can summarize this mapping from real world to camera plane, first the real world coordinates are transferred to camera coordinate frame via extrinsic matrix and the resulting points in camera coordinate frames are projected to image plane using camera matrix or intrinsic matrix. 
         \begin{figure}[h]
@@ -83,25 +84,25 @@ $K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &
      
      \textbf{Step: C Obtain homography from ground to image} \newline
      Obtaining camera pitch, height and camera intrinsics and using camera projection matrix we can obtain the transformation from ground to image. 
-     \begin{center}
-     $T_{ground}^{camera } = \begin{bmatrix}1 & 0 & 0 & 0 \\0 & cos(\frac{\pi}{2} + pitch_{cam}) & -sin(\frac{\pi}{2} + pitch_{cam}) & height_{cam} \\ 0 &sin(\frac{\pi}{2} + pitch_{cam}) &cos(\frac{\pi}{2} + pitch_{cam}) & 0   \end{bmatrix}$
-     \end{center}
+     \begin{equation}
+     T_{ground}^{camera } = \begin{bmatrix}1 & 0 & 0 & 0 \\0 & cos(\frac{\pi}{2} + pitch_{cam}) & -sin(\frac{\pi}{2} + pitch_{cam}) & height_{cam} \\ 0 &sin(\frac{\pi}{2} + pitch_{cam}) &cos(\frac{\pi}{2} + pitch_{cam}) & 0   \end{bmatrix}
+     \end{equation}
      
-     \begin{center}
-     $T_{ground}^{image} = K . T_{ground}^{camera }$
-    \end{center}
+     \begin{equation}
+     T_{ground}^{image} = K . T_{ground}^{camera }
+    \end{equation}
     
     
      \textbf{Step: D Obtain homography from image to ipm} \newline
     Until now we have $T^{image}_{ground}$ and $T^{ground}_{ipm}$
     
-    \begin{center}
-    $T^{image}_{ipm}$ = $T^{image}_{ground}$ X $T^{ground}_{ipm}$
-    \end{center}
+    \begin{equation}
+    T^{image}_{ipm} = T^{image}_{ground} X T^{ground}_{ipm}
+    \end{equation}
     
-    \begin{center}
-    $T^{ipm}_{image}$ = $(T^{ipm}_{image})^{-1}$
-    \end{center}
+    \begin{equation}
+    T^{ipm}_{image} = (T^{ipm}_{image})^{-1}
+    \end{equation}
     
     Using cv2.warpPerspective\footnote{\url{https://docs.opencv.org/3.4/da/d6e/tutorial_py_geometric_transformations.html}} again we can obtain our transformed image in BEV. 
     
