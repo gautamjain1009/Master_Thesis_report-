@@ -5,7 +5,7 @@
 
     \section{Pipeline Workflow: 2D Binary Lane Segmentation}
         \subsection{Architecture Overview}
-        We first utilized the dual stage architecture proposed by \cite{guo2020gen} to obtain 3D lane points, where the output from the first stage is binary lane segmentation. And authors have not explored the efficacy of more complex architecture for binary 2D lane segmentation on 3D lane detection results. So we experimented with some mentioned approaches in section 3.1 for the same. In this section we will briefly discuss the neural network architecture for the binary 2D lane segmentation that we have experimented in this work. 
+        We have utilized the dual stage architecture proposed by \cite{guo2020gen} to obtain 3D lane points, where the output from the first stage is binary lane segmentation. And authors have not explored the efficacy of more complex architecture for binary 2D lane segmentation on 3D lane detection results. So we experimented with some mentioned approaches in section 3.1 for the same. In this section we will briefly discuss the neural network architecture for the binary 2D lane segmentation that we have experimented in this work. 
         
         Originally \cite{guo2020gen} have utilized ERFNet\cite{Romera2018ERFNetER} based network to obtain binary segmentation which is an auto-encoder based network for the first stage. For that we conducted a comaparative evaluation with the existing pretrained models using CondLaneNet\cite{DBLP:journals/corr/abs-2105-05003}, SCNN\cite{pan2018SCNN}, RESA\cite{DBLP:journals/corr/abs-2008-13719}, UFLD\cite{DBLP:journals/corr/abs-2004-11757}, LaneATT\cite{https://doi.org/10.48550/arxiv.2010.12035} which we will talk about in the later sections. As we have discussed in section 3.1 that there is more scope in extracting more meaningful features for segmentation based 2D lane detection and to facilitate the 3D lane detection we need 2D binary lane segmentation as an intermediate output. so explored two segmentation based approaches as mentioned above SCNN\cite{pan2018SCNN}, RESA\cite{DBLP:journals/corr/abs-2008-13719}. Both of these approaches are using semantic segmentation to predict 2D lane line points where the input to the network is a monocular image. But in out case we need binary segmentation as the output, so we modified the existing approaches to work for 2D binary lane segmentation.    
         
@@ -70,10 +70,8 @@
     \end{figure}
     \footnotetext{\url{https://towardsdatascience.com/intersection-over-union-iou-calculation-for-evaluating-an-image-segmentation-model-8b22e2e84686}}
         
-        \subsection{Implementation Details}
-        We utilized three datasets for training the 2D binary lane segmentation pipeline. The first dataset is called TuSimple lane detection benchmark\cite{Tusimple}, as discussed in section 3.3.3 it is a simple dataset consists of normal highway driving. On the other hand we also use a more complex and much larger dataset compared to the previous one like CULane\cite{pan2018SCNN} which contains 55 hours of driving and contains different driving scenarios as discussed in section 3.3.3. We have also trained the 2D binay lane segmentation with Apollo Synthetic dataset\cite{guo2020gen} by utilizing the semantic segmentation labels provided in the dataset.   
-        
-        \textbf{<TO BE FILLED LATER, talk about the image resize, hyper parameter used>}
+        \subsection{Implementation Details and Other Design Choices}
+        We utilized three datasets for training the 2D binary lane segmentation pipeline. The first dataset is called TuSimple lane detection benchmark\cite{Tusimple}, as discussed in section 3.3.3 it is a simple dataset consists of normal highway driving. On the other hand we also use a more complex and much larger dataset compared to the previous one like CULane\cite{pan2018SCNN} which contains 55 hours of driving and contains different driving scenarios as discussed in section 3.3.3. We have also trained the 2D binay lane segmentation with Apollo Synthetic dataset\cite{guo2020gen} by utilizing the semantic segmentation labels provided in the dataset. We have conducted several experiments on the above mentioned datasets in terms of usage of different objective functions (dice loss, categorical cross entropy loss, focal loss), different variants of the network using mix and match of the above discussed encoder, decoders and feature aggregators. The input image is resized to $(360,480)$ and normalized using Imagenet\cite{deng2009imagenet} mean and standard deviation values. Adam\cite{Kingma2015AdamAM} with weight decay $1e-4$ is used as an optimizer to train our models. $0.001$ is chosen as an initial learning rate and on the top of that we have used ReduceLROnPlateu \footnote{\url{https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.ReduceLROnPlateau.html#torch.optim.lr_scheduler.ReduceLROnPlateau}} as the learning rate scheduler with $0.75$ as learning rate reduction factor, $3$ as patience factor denotes the number of epochs to wait when the learning rate has to be reduced if there is no improvement in loss, $1e-6$ as the lowest learning rate manged by the scheduler. All the models are trained with the batch size of $8, 16$ but we have only reported the results with batch size $8$ and training is carried for $60$ epochs. During training, the model is evaluated at every epoch and the results are visualized qualitatively and quantitatively using wandb \footnote{\url{https://wandb.ai}}.
         
     %---------------------------------------------------------------- After here must start 3d lane detection section%   
         
@@ -142,17 +140,26 @@
         
         \subsection{Experimental Setup: Approach 1}
         
-            \subsubsection{Dataset}
         
             \subsubsection{Loss Computation}
-        
-                \textbf{Rememember to mention the dataflow of the whole pipeline for the loss computation}
-        
-        
+            While training, the pipeline takes as an input an RGB image and predicts an anchor based representation of 3D lane lines which is discussed in section 4.2.2. The ground-truth 3D lane points are projected in virtual top-view and the anchors are calculated in terms of different y-positions $\left\{ y_{i} \right\}^{k}_{j=1}$ by associating them with the closest anchors at that particular $Y_{ref}$. Loss function for the predicted anchors $\hat{X}_{A}^{i}$ and the ground-truth anchors $\hat{X}_{A}^{i}$ =$ \left\{(\hat{x^{i}_{t}},\hat{z^{i}_{t}},\hat{v^{i}_{t}},\hat{p^{i}_{t}})\right\}_{t\in\left\{c,l\right\}}     $ is defined as: 
+            
+            \begin{equation}% 
+\mbox{\fontsize{15}{21.6}\selectfont\( %
+ \begin{array}{l}
+                l = - \sum_{t\in\left\{c,l\right\}} \sum ^{N}_{i=1}(\hat{p}^{i}_{t} logp^{i}_{t} + (1-\hat{p}^{i}_{t})log(1-p^{i}_{t}) )   \\ 
+                +  \sum_{t\in\left\{c,l\right\}} \sum ^{N}_{i=1}\hat{p}^{i}_{t}\cdot(\parallel \hat{v}^{i}_{t} \cdot (x^{i}_{t} - \hat{x}^{i}_{t}) \parallel_{1} + \parallel \hat{v}^{i}_{t} \cdot (z^{i}_{t} - \hat{z}^{i}_{t}) \parallel_{1} ) \\ 
+                + \sum_{t\in\left\{c,l\right\}} \sum ^{N}_{i=1} \hat{p}^{i}_{t} \cdot \parallel v^{i}_{t} - \hat{v}^{i}_{t} \parallel^{1}
+            \end{array} %
+\)} %
+\end{equation}
+            where $x^{i}_{t}$ represents the horizontal offset, $z^{i}_{t}$ indicates the height offset, $v^{i}_{t}$ denotes the visibility of lane points and $p^{i}_{t}$ is the probability of existence of a lane. 
         
             \subsubsection{Evaluation Metric}
+            
+            We have used the evaluation metric proposed by \cite{guo2020gen} which is defined as a bipartite matching problem between predicted lane anchors and ground-truth lane anchors. This bipartite matching is facilitated by calculating a pairwise cost between lane lines in terms of euclidean distance. 
         
-            \subsubsection{Implementation Details}
+            \subsubsection{Implementation Details and Other Design Choices}
         
 %------------------------------------------------------------------------------------------ Approach 2 starts from here%
         \subsection{Approach 2}
