@@ -157,14 +157,25 @@
         
             \subsubsection{Evaluation Metric}
             
-            We have used the evaluation metric proposed by \cite{guo2020gen} which is defined as a bipartite matching problem between predicted lane anchors and ground-truth lane anchors. This bipartite matching is facilitated by calculating a pairwise cost between lane lines in terms of euclidean distance. 
-        
+            We have used the evaluation metric proposed by \cite{guo2020gen} which is defined as a bipartite matching problem between predicted lane anchors and ground-truth lane anchors. This bipartite matching is facilitated by calculating a pairwise cost between lane lines in terms of euclidean distance. $X^{j}$ =$ \left\{x^{j}_{t},z^{j}_{t},v^{j}_{t}\right\}_{i=1}^{n}     $ represents the predicted lane in terms of anchor representation, similarly $X^{k}$ represents the ground-truth lane at n predetermined y positions. In this case cost between $X^{j}$ and $X^{k}$ is defined as square root of the sum of squared sum of point-wise distance over the y position
+            
+            \begin{equation}
+             cost_{jk} = \sqrt{\sum_n^i d_{i}^{jk}}
+            \end{equation}
+            
+            \begin{equation}
+              d_{i}^{jk} = \begin{cases}(x_{i}^{j} - x_{i}^{k} )^{2} + (z_{i}^{j} - z_{i}^{k} )^{2},  & v_{i^{j}} =1, v_{i^{k}} =1 \\0,   & v_{i^{j}} =0, v_{i^{k}} =0\\ d_{max}, & otherwise\end{cases}
+            \end{equation}
+            
+            According to equation 4.10, this point-wise euclidean distance is considered only when the y-position is captured by both the lanes, in the case when only one lane is present at a particular y-position, this point-wise euclidean distance is $d_max = 1.5m$ and in the cases where a particular y-position is not occupied by any of the lanes it is assigned to zero. As per \cite{guo2020gen} a solver from Google OR-tools is used to solve the minimum cost flow problem, after all pair-wise distance between two lanes at different predefined y-positions are calculated. Two lane pairs are considered to be matched when the point-wise distance at $75\%$ of its different y-position is less than the max allowed distance. This percentage of matched ground-truth lanes is generally denoted by recall and percentage of matched predictions is denoted by precision. In this work we have reported AP(Average Precision) and F-score as an evaluation metric. 
+            
             \subsubsection{Implementation Details and Other Design Choices}
-        
+            In this work we have experimented with the pipeline proposed by \cite{Guo_2018_ECCV}, by replacing the ERFNet\cite{8063438} based binary lane segmentation network with a better performing binary lane segmentation architecture. The binary lane segmentation models are trained on Apollo Synthetic dataset \cite{guo2020gen}, TuSimple \cite{Tusimple} and CULane \cite{pan2018SCNN}. For training 3D lane detection, the obtained binary lane segmentation model is fixed and the output binary lane segmentation is used as an input to the 3D lane detection pipeline. We have used Apollo Synthetic dataset \cite{Guo_2018_ECCV} for the training of 3D lane detection, where the dataset is divided into 3 different splits (balanced, rarely observed, visual variation) depending on the varying driving scenarios and we have reported the results on all three data splits. A RGB image is resized to $360 x 480$ from it's original image and fed as an input to the pipeline. $208 x 108$ is the spatial resolution of the top view layer which represents a flat ground in the range of $[-10, 10] x [1 , 101]$ meters in lateral and longitudinal directions that is x and y. $[3, 5, 10, 15, 20, 30, 40, 50, 65, 80, 100]$ are the predefined location of y-positions in terms of anchor representation. All the experiments are conducted using known camera intrinsic and extrinsic parameters which is provided by the Synthetic Apollo dataset. Adam optimizer is used, with the starting learning rate of $5*10^{-4}$ and batch size of 8. 
+            
 %------------------------------------------------------------------------------------------ Approach 2 starts from here%
         \subsection{Approach 2}
         
-        \subsubection{Architecture Overview of Proposed Dual Stage Semi-Local Anchor-Less 3D Lane Detection pipeline}
+        \subsubsection{Architecture Overview of Proposed Dual Stage Semi-Local Anchor-Less 3D Lane Detection}
         
         Anchor based 3D lane detection approaches face similar challenges as anchor based 2D lane detection. Therefore it is not able to generalize well with different lane topologies. Utilizing the idea of dual stage network proposed by \cite{guo2020gen} and anchors less semi-local 3D lane detection approach proposed by \cite{DBLP:journals/corr/abs-2011-01535}, we proposed an semi-local anchor-less dual stage network for obtaining 3D lane line points.
         
@@ -186,7 +197,7 @@
         
         \subsubsection{Evaluation Metrics}
         
-        
+        5ec306a85da14ae2406e9e812b213c0db8252817
         \subsubsection{Implementation Details}
             
             \textbf{<<<Explain the hyper params, design decisions(Tile size res, delta v delta d and more ), and experiments in-terms of tables for 3D lane detection>>>}
