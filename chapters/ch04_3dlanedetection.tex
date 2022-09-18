@@ -190,15 +190,79 @@
      In the embedding pathway the normalized birds-eye lane binary segmentation mask is fed to a series of $1x1$ convolution layers which is responsible for learning global lane embeddings, inspired by \cite{DBLP:journals/corr/abs-1802-05591} mean-shift clustering is performed on the learned global lane embedding to complete multiple lane segments to complete lane curves. We learn an embedding vector $f_{ij}$ for each tile and using discriminative push-pull loss inspired from \cite{DBLP:journals/corr/abs-2011-01535} \cite{DBLP:journals/corr/abs-1802-05591} as an objective function to learn the global lane embeddings. Discriminative push-pull loss ensures that the embedding that belong to the same line will stay close in the embedding space whereas embedding for tiles of different lanes will stay far from each other in embedding space. 
 
     \subsection{Experimental setup: Approach 2}
-        \subsubsection{Dataset}
+    As we have discussed earlier in this approach we are trying to predict 3D lane line points semi-locally where the binary lane segmentation maps are transformed to a virtual top view and regression pathway predicts the geometric parameters related to 3D lane curves and embedding learned via the embedding pathway is clustered to obtain lane line labels. Via each tile $g_{ij} \in G_{WxH}$ we are trying to approximate a lane segment and each tile will contribute one point to the 3D lane curve and we can trace the whole 3D lane curve. Below we will discuss in detail the generation of ground-truth, loss functions used to learn the angle and height offsets and how to generate a full 3D lane curve using the per tile predictions from the model. 
+        \subsubsection{Ground Truth Creation}
+        Following the idea proposed by \cite{DBLP:journals/corr/abs-2011-01535} that through each tile passes a single line segment and to approximate that line segment we are trying to approximate it using a straight line. The regression pathway regresses per each tile $\widetilde{r_{ij}}$ lateral offset distance relative to tile center, line angle $\widetilde{\phi}_{ij}$, $\triangle{\widetilde{z_{ij}}}$ and this pathway also predicts a binary classification score $\widetilde{c_{ij}}$ denoting if a lane segment intersects that particular tile or not. 
+        Ground-truth for the angle and distance offsets are computed by first projecting the ground-truth 3D lane points on the road plane in bird eye view (BEV) and the resulting 2D lane curves are obtained in BEV. The resulting projected image is decimated into grids. Using the above mentionde idea of approximating a lane curve by dividing it into small lane segments, we have used lane approximation algorithms like Hough Transform to obtain the $r_{ij}$ and $\phi_{ij}$. Thus representing the lane segment in the form of polar coordinates and this process is done for all the decimated tiles. The resulting line angle and distance offsets are calculated with respect to the origin at the center of each tile. To represent the line angle and distance offsets with respect to a global origin at the top-left corner of the image we have used Hesse normal form \footnotetext{\url{https://en.wikipedia.org/wiki/Hesse_normal_form}}. 
+        
+        
+        Height offset $\triangle Z$ for each tile can be calculated by considering two scenarios in the figure below. 
+        \begin{figure}[h]
+        \centering
+        \begin{subfigure}{0.4\textwidth}
+        \includegraphics[width=1.2\linewidth, height=3cm]{images/delta_z_uphill.png} 
+        \caption{}
+        \label{fig:subim1}
+        \end{subfigure}
+        \begin{subfigure}{0.4\textwidth}
+        \includegraphics[width=1\linewidth, height=4cm]{images/delat_z_downhill.png}
+        \caption{}
+        \label{fig:subim2}
+        \end{subfigure}
+        
+        \caption{Uphill and downhill driving scenario of an autonomous ego vehicle.}
+        \label{fig:image2}
+        \end{figure}
+        
         
         \subsubsection{Loss Computation}
-            \textbf{Rememember to mention the dataflow of the whole pipeline for the loss computation}
-        
+            For training the position and angle offsets $L1$ loss is used as an objective function. 
+            
+            \begin{equation}
+                L^{Offsets}_{i,j} = \parallel \widetilde{r_{i,j}} - r_{i,j} \parallel_{1} + \parallel \triangle{\widetilde{z_{i,j}}} - \triangle{z_{i,j}} \parallel_{1} 
+             \end{equation}
+             
+             The prediction of $\widetilde{\phi}_{ij}$ is carried out using a hybrid classification-regression schema proposed by \cite{}, where we classification of angle $\phi$ is done on the basis that it lies in one of $N_{\alpha}$ bins. Example, if we decide that each bin will have an interval of $36^{\circ}$ then there exists 10 bins, where $\alpha = \left\{\frac{2\pi}{N_{\alpha} } \cdot i \right\}^{N_{\alpha}}_{i =1} $. Network also regresses a vector $\triangle^{\alpha}$ which is responsible for addressing the residual offset related to bin classification. This bin estimation problem is optimized using a soft multi-label objective and the ground-truth probabilities for each bin is calculated via $ p^{\alpha} = [1 - \vert \frac{2\pi}{N_{\alpha}} \cdot i  - \phi  \vert \ \frac{2\pi}{N_{\alpha}} ]_{+}$.
+             
+             The resulting angle loss is the combination of classification and offset regression loss which can be defined as:
+             \begin{equation}
+                 L_{ij}^{Offsets} = \sum_{\alpha=1}^{N_{\alpha}}[p^{\alpha}_{ij} \cdot log \tilde{p^{\alpha}_{ij}} + (1 - p^{\alpha}_{ij}) + \delta^{\alpha}_{ij} \parallel   \tilde{\triangle^{\alpha}_{ij}} - \triangle^{\alpha}_{ij} \parallel_{1} ]
+             \end{equation}
+             
+             In the above equation $\delta^{\alpha}_{ij}$ is an indicator function which the masking the bins for offset learning. 
+             
+             To train the lane tile probability $\widetilde{c_{ij}}$ is trained via binary vross entropy loss:
+             \begin{equation}
+                 L_{ij}^{score} = c_{ij} \cdot log \widetilde{c_{ij}} + (1 - c_{ij}) \cdot log
+                    (1-  \widetilde{c_{ij}})
+             \end{equation}
+             
+             Overall tile loss is the sum of the above mentioned losses for all the tiles of the decimated grid:
+             
+            \begin{equation}
+                L^{tiles} = \sum_{i,j \in WxH}(L^{score}_{ij} +c_{ij} \cdot L^{angle}_{ij} + c_{ij} \cdot L^{offsets}_{ij}  )
+            \end{equation}
+            
+            To learn the global embeddings for lane curve clustering we have adopted the discriminative push-pull loss proposed in \cite{} , \cite{}. For each tile an embedding vector $f_{ij}$ is learned, the main idea behind using the discriminative push pull loss is that embedding vectors which belong to the same lane would reside close to each other in the embedding space and the vectors which belong to different lanes would reside apart. The above mentioned driscriminative push-pull loss is a sum of two losses:
+            
+            \begin{equation}
+                L^{embedding} = L^{pull} + L^{push}
+            \end{equation}
+             
+             \begin{equation}
+                     L^{pull} = \frac{1}{C} \sum^{C}_{c=1}\frac{1}{N_{c}} \sum_{ij \in WXH}[ \delta_{ij}^{c} \parallel \mu_{c} - f_{ij}  \parallel - \triangle_{pull} ]_{+}^{2} 
+             \end{equation}
+             
+             \begin{equation}
+                 L^{push} =  \frac{1}{C(C -1)} \sum^{C}_{C_{A=1} } \sum^{C}_{C_{B=1}, C_{A} \not =C_{B}}[ \triangle_{push} - \parallel \mu_{CA} - \mu_{CB}\parallel ]_{+}^{2}
+             \end{equation}
+            
+            Here $C$ is the number of lanes, $N_{c}$ denotes the number of tiles that belong to lane c, $\delta_{ij}^{c}$ denotes if tile $i,j$ belongs to lane c, $\mu_{c} = \frac{1}{N_{c}} \sum_{ij \in WXH } \delta^{c}_{ij} \cdot f_{ij}$ is the mean of embedding vector that belongs to lane $c$. $\triangle_{pull}$ and $\triangle_{pull}$ denotes maximum and minimum distance between the clusters. 
+
         \subsubsection{Evaluation Metrics}
         
         5ec306a85da14ae2406e9e812b213c0db8252817
-        \subsubsection{Implementation Details}
+        \subsubsection{Implementation Details and Other Design Choices }
             
             \textbf{<<<Explain the hyper params, design decisions(Tile size res, delta v delta d and more ), and experiments in-terms of tables for 3D lane detection>>>}
     
