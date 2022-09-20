@@ -275,11 +275,4 @@
         For the first stage of this approach we have used the best model obtained from our experimentation on binary lane segmentation which will be discussed in detail in later sections. BEV projection envelop $20.4m x 80m$ of the road and the BEV feature map is decimated to a grid, where each tile represents $16x16$ pixels, resulting in grid $G_{WXH}$ with W =16 and $H =26$. The resolution of each tile is $1.28m x 3m$ with $416x256$ as the spatial size of the BEV projection. Instead of predicting the camera height and pitch we have used the values provided in the dataset itself.  The input image is
         resized to $(360x480)$ and normalized using Imagenet\cite{deng2009imagenet} mean and standard deviation values. ADAM with weight decay 1e − 4 is used as an optimizer to train our models. 0.001 is chosen as an initial learning rate and on the top of that we have used ReduceLROnPlateu \footnote{\url{https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.ReduceLROnPlateau.html#torch.optim.lr_scheduler.ReduceLROnPlateau}} as the learning rate scheduler with 0.75 as learning rate reduction factor, 3 as patience factor denotes the number of epochs to wait when the learning rate has to be reduced if there is no improvement in loss, 1e − 6 as the lowest learning rate manged by the scheduler. The model is trained with batch size of 8 and training is carried out for 50 epochs. During training, the model is evaluated at every epoch and the results are visualized qualitatively and quantitatively using wandb \footnote{\url{https://wandb.ai}}. 0.1 and 3 are used as $\triangle_{pull}$ and $\triangle_{push}$, 0.3 is used a threshold value on the predicted lane scores per tile before performing clustering.
         
-    
-    \section{Pipeline Workflow: 3D Lane AuxNet}
-        \subsection{Model Architecture}
-        \subsection{Dataset}
-        \subsection{Evaluation Metrics}
-        \subsection{Implementation Details}
-        
 \end{document}

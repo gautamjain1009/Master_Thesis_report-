@@ -3,6 +3,63 @@
 \begin{document}
     \chapter{Evaluation and Results}
     
+    In this section we will report our quantitative and qualitative analysis on the results obtained from 2D Lane Detection, binary lane segmentation, followed by the resulting 3D Lane detection approaches discussed in section 4.2.3 and 4.2.6. Moreover we will discuss in detail about the current status of the proposed dual stage semi-local 3D lane detector. 
+    
+    \section{2D Lane Detection}
+    As in our proposed approach we have adopted the dual stage way of predicting 3D lane curves inspired from \cite{guo2020gen}, where the first stage is binary lane segmentation followed by a 3D lane detector. Considering the speciality of 2D lane detection as we need to capture rich vision cues from the environment, we stated exploring approaches like \cite{}, \cite{}, \cite{}, \cite{} which are performing the task of 2D Lane Detection. Though this work is mainly focused on the detecting 2D lane lines via the means of segmentation, but we have carried out a comparative evaluation of the above mentioned approaches which will form the base of experimentation for binary lane segmentation. All the above mentioned approaches were trained on  CULane \cite{} and TuSimple \cite{}. Our motive with this evaluation was to obtain the best performing segmentation based 2D lane detection  architecture. We have evaluated these approaches using pre-trained models on the above mentioned datasets. The evaluation metrics used are FI score and Accuracy: 
+    
+    \begin{equation}
+        F1 = \frac{2*precision * recall}{precision + recall}
+    \end{equation}
+    
+where, $precision = \frac{TP}{TP + FP}$ and recall= $precision = \frac{TP}{TP + FN}$. Like in case of CULane \cite{} dataset each lane is composed of 30-pixel width and IoU(Intesection Over Union) is calculated between the predictions and and ground-truth. If IoU > 0.5, it is treated as TP. 
+For TuSimple dataset accuracy is used as an offical metric to evaluate an approach which can be defined as, $accuracy = \sum_{clip} C_{clip} / \sum_{clip} C_{clip}$. Where $S_{clip}$ represents the total number of points in the clip and $C_{clip}$ is the total number of points predicted correctly. 
+
+\begin{table}[]
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\textbf{Approach} & \textbf{Backbone}                                                   & \textbf{Dataset} & \textbf{\begin{tabular}[c]{@{}c@{}}Pretrained \\ Metric\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Reported \\ Metric\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}FPS\\ (Pre-trained \\ \& Reported)\end{tabular}} \\ \hline
+SCNN              & Resnet50                                                            & CULane           & F1: 74.89                                                             & —                                                                   & —                                                                                   \\ \hline
+SCNN              & \begin{tabular}[c]{@{}c@{}}LargeFOV\\ (Deep lab VGG16)\end{tabular} & CULane           & —                                                                     & F1: 71.7                                                            & —                                                                                   \\ \hline
+SCNN              & Resnet18                                                            & TuSimple         & Acc: 96.05                                                            & Acc: 96.53                                                          & —                                                                                   \\ \hline
+Ufld              & Resnet18                                                            & CUlane           & F1: 69.47                                                             & F1: 68.4                                                            & \textbf{$\sim$300fps}                                                               \\ \hline
+Ufld              & Resnet34                                                            & CUlane           & —                                                                     & F1: 72.3                                                            & $\sim$300fps                                                                        \\ \hline
+Ufld              & Resnet18                                                            & TuSimple         & Acc: 95.86                                                            & Acc:95.87                                                           & $\sim$300fps                                                                        \\ \hline
+Ufld              & Resnet34                                                            & TuSimple         & —                                                                     & Acc:96.06                                                           & $\sim$300fps                                                                        \\ \hline
+Condlane          & Resnet101                                                           & CULane           & \textbf{F1: 79.48}                                                    & \textbf{F1: 79.48}                                                  & —                                                                                   \\ \hline
+Condlane          & Resnet34                                                            & CULane           & F1: 78.74                                                             & F1: 78.74                                                           & —                                                                                   \\ \hline
+Condlane          & Resnet18                                                            & CULane           & F1: 78.14                                                             & F1: 78.14                                                           & —                                                                                   \\ \hline
+Condlane          & Resnet101                                                           & TuSimple         & \textbf{Acc: 97.24}                                                   & \textbf{Acc: 97.24}                                                 & —                                                                                   \\ \hline
+Condlane          & Resnet34                                                            & TuSimple         & Acc: 96.98                                                            & Acc: 96.98                                                          & —                                                                                   \\ \hline
+RESA              & ResNet50                                                            & CULane           & F1:75.92                                                              & F1: 75.3                                                            & $\sim$35 fps                                                                        \\ \hline
+RESA              & VGG16                                                               & CULane           & —                                                                     & F1: 73.3                                                            & —                                                                                   \\ \hline
+RESA              & Resnet34                                                            & CULane           & F1: 75.85                                                             & F1: 74.5                                                            & $\sim$45 fps                                                                        \\ \hline
+RESA              & Resnet34                                                            & TuSimple         & Acc: 96.86                                                            & Acc: 96.82                                                          & $\sim$45 fps                                                                        \\ \hline
+RESA              & Resnet18                                                            & TuSimple         & Acc: 96.73                                                            & Acc: 96.70                                                          & $\sim$47 fps                                                                        \\ \hline
+LaneATT           & Resnet18                                                            & CULane           & F1: 75.10                                                             & —                                                                   & —                                                                                   \\ \hline
+LaneATT           & MobileNetv2                                                         & CULane           & F1: 75.10                                                             & —                                                                   & —                                                                                   \\ \hline
+LaneATT           & MobileNetv2                                                         & TuSimple         & Acc: 95.66                                                            & —                                                                   & —                                                                                   \\ \hline
+LaneATT           & Resnet34                                                            & TuSimple         & Acc: 95.81                                                            & —                                                                   & —                                                                                   \\ \hline
+Enet-SAD          & Resnet18                                                            & TuSimple         & (pipeline available)                                                  & Acc: 96.02                                                          & —                                                                                   \\ \hline
+Enet-SAD          & Resnet18                                                            & TuSimple         & (pipeline available)                                                  & Acc: 96.24                                                          & —                                                                                   \\ \hline
+Enet-SAD          & Enet                                                                & TuSimple         & (pipeline available)                                                  & Acc: 96.64                                                          & —                                                                                   \\ \hline
+Enet-SAD          & Resnet18                                                            & CULane           & (pipeline available)                                                  & F1: 70.5                                                            & —                                                                                   \\ \hline
+Enet-SAD          & Resnet34                                                            & CULane           & (pipeline available)                                                  & F1: 70.7                                                            & —                                                                                   \\ \hline
+Enet-SAD          & Resnet101                                                           & CULane           & (pipeline available)                                                  & F1: 71.8                                                            & —                                                                                   \\ \hline
+Enet-SAD          & Enet                                                                & CULane           & (pipeline available)                                                  & F1: 70.8                                                            & —                                                                                   \\ \hline
+\end{tabular}
+\end{table}
+
+From the table above we can see that, CondaLane \cite{}
+    
+    
+    \section{Binary Lane Segmentation}
+    
+    
+    \section{3D Lane Detection}
+    
+    \subsubsection{Approach: 1}
+    \subsubsection{Approach: 2}
     \textbf{Remember to dicuss your 2D Lane detection evaluation and how you have chosen to work with particular ones}
     
     
