@@ -6,7 +6,7 @@
     In this section we will report our quantitative and qualitative analysis on the results obtained from 2D Lane Detection, binary lane segmentation, followed by the resulting 3D Lane detection approaches discussed in section 4.2.3 and 4.2.6. Moreover we will discuss in detail about the current status of the proposed dual stage semi-local 3D lane detector. 
     
     \section{2D Lane Detection}
-    As in our proposed approach we have adopted the dual stage way of predicting 3D lane curves inspired from \cite{guo2020gen}, where the first stage is binary lane segmentation followed by a 3D lane detector. Considering the speciality of 2D lane detection as we need to capture rich vision cues from the environment, we stated exploring approaches like \cite{}, \cite{}, \cite{}, \cite{} which are performing the task of 2D Lane Detection. Though this work is mainly focused on the detecting 2D lane lines via the means of segmentation, but we have carried out a comparative evaluation of the above mentioned approaches which will form the base of experimentation for binary lane segmentation. All the above mentioned approaches were trained on  CULane \cite{} and TuSimple \cite{}. Our motive with this evaluation was to obtain the best performing segmentation based 2D lane detection  architecture. We have evaluated these approaches using pre-trained models on the above mentioned datasets. The evaluation metrics used are FI score and Accuracy: 
+    As in our proposed approach we have adopted the dual stage way of predicting 3D lane curves inspired from \cite{guo2020gen}, where the first stage is binary lane segmentation followed by a 3D lane detector. Considering the uniqueness of the task of 2D lane detection as we need to capture rich vision cues from the environment, we stated exploring approaches like SCNN \cite{}, Ufld \cite{}, CondLaneNet \cite{}, RESA \cite{},  LaneATT \cite{}, Enet-SAD \cite{} which are performing the task of 2D Lane Detection. Though this work is mainly focused on the detecting 2D lane lines via the means of segmentation, but we have carried out a comparative evaluation of the above mentioned approaches which will form the base of experimentation for binary lane segmentation. All the above mentioned approaches were trained on  CULane \cite{} and TuSimple \cite{}. Our motive with this evaluation was to obtain the best performing segmentation based 2D lane detection architecture. We have evaluated these approaches using pre-trained models on the above mentioned datasets. The evaluation metrics used are FI score and Accuracy: 
     
     \begin{equation}
         F1 = \frac{2*precision * recall}{precision + recall}
@@ -16,6 +16,7 @@ where, $precision = \frac{TP}{TP + FP}$ and recall= $precision = \frac{TP}{TP + 
 For TuSimple dataset accuracy is used as an offical metric to evaluate an approach which can be defined as, $accuracy = \sum_{clip} C_{clip} / \sum_{clip} C_{clip}$. Where $S_{clip}$ represents the total number of points in the clip and $C_{clip}$ is the total number of points predicted correctly. 
 
 \begin{table}[]
+ \caption{Comparative evaluation of the above mentioned approaches for the task of 2D Lane Detection}
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
 \textbf{Approach} & \textbf{Backbone}                                                   & \textbf{Dataset} & \textbf{\begin{tabular}[c]{@{}c@{}}Pretrained \\ Metric\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Reported \\ Metric\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}FPS\\ (Pre-trained \\ \& Reported)\end{tabular}} \\ \hline
@@ -26,11 +27,11 @@ Ufld              & Resnet18                                                    
 Ufld              & Resnet34                                                            & CUlane           & —                                                                     & F1: 72.3                                                            & $\sim$300fps                                                                        \\ \hline
 Ufld              & Resnet18                                                            & TuSimple         & Acc: 95.86                                                            & Acc:95.87                                                           & $\sim$300fps                                                                        \\ \hline
 Ufld              & Resnet34                                                            & TuSimple         & —                                                                     & Acc:96.06                                                           & $\sim$300fps                                                                        \\ \hline
-Condlane          & Resnet101                                                           & CULane           & \textbf{F1: 79.48}                                                    & \textbf{F1: 79.48}                                                  & —                                                                                   \\ \hline
-Condlane          & Resnet34                                                            & CULane           & F1: 78.74                                                             & F1: 78.74                                                           & —                                                                                   \\ \hline
-Condlane          & Resnet18                                                            & CULane           & F1: 78.14                                                             & F1: 78.14                                                           & —                                                                                   \\ \hline
-Condlane          & Resnet101                                                           & TuSimple         & \textbf{Acc: 97.24}                                                   & \textbf{Acc: 97.24}                                                 & —                                                                                   \\ \hline
-Condlane          & Resnet34                                                            & TuSimple         & Acc: 96.98                                                            & Acc: 96.98                                                          & —                                                                                   \\ \hline
+CondLaneNet       & Resnet101                                                           & CULane           & \textbf{F1: 79.48}                                                    & \textbf{F1: 79.48}                                                  & —                                                                                   \\ \hline
+CondLaneNet       & Resnet34                                                            & CULane           & F1: 78.74                                                             & F1: 78.74                                                           & —                                                                                   \\ \hline
+CondLaneNet       & Resnet18                                                            & CULane           & F1: 78.14                                                             & F1: 78.14                                                           & —                                                                                   \\ \hline
+CondLaneNet       & Resnet101                                                           & TuSimple         & \textbf{Acc: 97.24}                                                   & \textbf{Acc: 97.24}                                                 & —                                                                                   \\ \hline
+CondLaneNet       & Resnet34                                                            & TuSimple         & Acc: 96.98                                                            & Acc: 96.98                                                          & —                                                                                   \\ \hline
 RESA              & ResNet50                                                            & CULane           & F1:75.92                                                              & F1: 75.3                                                            & $\sim$35 fps                                                                        \\ \hline
 RESA              & VGG16                                                               & CULane           & —                                                                     & F1: 73.3                                                            & —                                                                                   \\ \hline
 RESA              & Resnet34                                                            & CULane           & F1: 75.85                                                             & F1: 74.5                                                            & $\sim$45 fps                                                                        \\ \hline
@@ -49,50 +50,171 @@ Enet-SAD          & Resnet101                                                   
 Enet-SAD          & Enet                                                                & CULane           & (pipeline available)                                                  & F1: 70.8                                                            & —                                                                                   \\ \hline
 \end{tabular}
 \end{table}
-
-From the table above we can see that, CondaLane \cite{}
+From the table 5.1 we can see that, CondLaneNet \cite{} performs the best on TuSimple and CULane dataset for the task of lane segmentation. As in our work we are focusing on detecting 2D lanes via the approaches which are segmentation based. Therefore our pipeline for binary segmentation, as mentioned in section 4.1 is composed of mix and match of different back-backbone, feature aggregator and heads utilized by SCNN \cite{} and \RESA{}. 
     
     
     \section{Binary Lane Segmentation}
+    Binary Lane Segmentation can be seen as a sub-task of 2D lane segmentation, where instead of predicting multiple labels for different lanes we are just focusing on separating the 2D lane lines from the back ground in an image. Below we will discuss in detail the experimentation that is conducted to obtain an efficient 2D binary lane segmentation algorithm. Initially the models are trained on CULane \cite{}, TuSimple \cite{} and Apollo Synthetic dataset (sim3D) \cite{} with Cross Entropy loss as our objective function. 
+    
+          
+    \begin{table}[h!]
+    \caption{Results for binary lane segmentation using Cross Entropy loss as the loss function}
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+        \textbf{Method} & \textbf{IoU} & \textbf{FPS} \\ \hline
+        SCNN(Res18+TuSimple) & 54.81 & $\approx$ \textbf{70}  \\ \hline
+        RESA(Res18+TuSimple) & 56.73 & $\approx$ 50 \\\hline
+        SCNN(Res18+CUlane) & 38.1 & $\approx$ 70 \\ \hline
+        RESA(Res18+CUlane) & 43.23 &  $\approx$ 45\\\hline
+        SCNN(Res18+sim3d) & 44.12 & $\approx$ 70 \\ \hline
+        RESA(Res18+sim3d) & 71.79 & $\approx$ 45 \\ \hline
+        RESA(Res50+sim3d) & \textbf{74.11} & $\approx$ 40 \\ \hline
+        
+    \end{tabular}
+\end{table}
+    
+       \begin{figure}[h]
+       \caption{Initial binary lane segmentation results: (a) SCNN (Res18+CULane), (b) SCNN (Res18 + TuSimple) and (c) RESA (Res18 + sim3d)}
+        \centering
+        \begin{subfigure}{0.6\textwidth}
+        \includegraphics[width=1.2\linewidth, height=3cm]{images/SCNN_res_culane.png} 
+        \caption{}
+        \label{fig:subim1}
+        \end{subfigure}
+        \begin{subfigure}{0.4\textwidth}
+        \includegraphics[width=1\linewidth, height=4cm]{images/SCNN_res_tusimple.png}
+        \caption{}
+        \label{fig:subim2}
+        \end{subfigure}
+        \begin{subfigure}{0.4\textwidth}
+        \includegraphics[width=1\linewidth, height=4cm]{images/Resa_r18_sim3d.png}
+        \caption{}
+        \label{fig:subim2}
+        \end{subfigure}
+        \label{fig:image2}
+        \end{figure}
+    
+    From the equation \textbf{XXX} Cross entropy aims at reducing the pixel-wise error, therefore cross entropy only considers loss locally not globally. Thus the statistical distribution of labels can affect the overall loss. The cases where the occurrence of one class overpowers the other this condition is called class imbalance. Binary lane segmentation also suffers with the same problem as the number of pixels occupied by lane lines is far lesser than the number of pixels represented by the background. 
+    
+    Addressing this issue of class imbalance in binary lane segmentation we conducted some experiments by replacing Cross Entropy loss by Dice loss and Focal loss. Detailed explanation of these losses are mentioned in section 4.1.2. We first try to predict the 
+    
+     \begin{table}[h!]
+    \caption{Quantitative results for binary lane segmentation trained on sim3d \cite{} dataset using Cross Entropy Loss, Focal Loss and Dice Loss}
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+        \textbf{Method} & \textbf{IoU} & \textbf{FPS} \\ \hline
+        RESA(Res18+Cross Entropy) & 71.79 & $\approx$ 45 \\ \hline
+        SCNN(Res18+Cross Entropy) & 44.12 & $\approx$ \textbf{70}  \\ \hline
+        RESA(Res50+Cross Entropy) & 74.11 & $\approx$ 40  \\ \hline
+        RESA(Res18+Focal Loss) & 75.59 & $\approx$ 55 \\\hline
+        RESA(Res18+Dice Loss) & 82.57 & $\approx$ 50 \\\hline
+        RESA(Res50+Dice Loss) & \textbf{83.33} & $\approx$ 50 \\\hline
+    \end{tabular}
+\end{table}
+    
+      \begin{figure}[h]
+       \caption{Qualitative results for binary lane segmentation trained on sim3d dataset: (a) RESA(Res18+Cross Entropy Loss) (b) RESA(Res18+Dice Loss) (c)RESA(Res18+Focal Loss)}
+        \centering
+        \begin{subfigure}{0.4\textwidth}
+        \includegraphics[width=1\linewidth, height=4cm]{images/binseg_ce_resa.png} 
+        \caption{}
+        \label{fig:subim1}
+        \end{subfigure}
+        \begin{subfigure}{0.4\textwidth}
+        \includegraphics[width=1\linewidth,height=4cm]{images/binseg_dice_resa.png}
+        \caption{}
+        \label{fig:subim2}
+        \end{subfigure}
+        \begin{subfigure}{0.4\textwidth}
+        \includegraphics[width=1\linewidth, height=4cm]{images/binseg_focal_resa.png}
+        \caption{}
+        \label{fig:subim2}
+        \end{subfigure}
+        \label{fig:image2}
+        \end{figure}
+    
+     \begin{figure}[h]
+       \caption{IoU for binary lane segmentation trained on sim3D dataset with cross entropy, dice and focal loss.}
+        \centering
+        \begin{subfigure}{0.6\textwidth}
+        \includegraphics[width=1\linewidth, height=5cm]{images/binseg_IOU.png} 
+        \label{fig:subim1}
+        \end{subfigure}
+        \end{figure}
+    
+    From Table 5.3 and figure 5.3 we can conclude that using dice loss and focal loss the class imbalance problem is addressed, resulting better in IoU. Moreover there is significant change in the quality of binary lane segmentation.
+        After countering the class imbalance problem we trained some models on sim3d dataset which predicts binary lane segmentation for all the lanes present in the scene.
+        
+        
+           \begin{table}[h!]
+    \caption{Quantitative results for binary lane segmentation on sim3D dataset for all the lanes present in the scene}
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+        \textbf{Method} & \textbf{IoU} & \textbf{FPS} \\ \hline
+        SCNN(Res18+Focal Loss) & 44.01 & $\approx$ \textbf{70} \\\hline
+        RESA(Res18+Dice Loss) & 86.56 & $\approx$ 55 \\\hline
+        RESA(Res50+Dice Loss) & \textbf{86.67} & $\approx$ 50 \\\hline
+    \end{tabular}
+\end{table}
+        
+        
+        \begin{figure}[h]
+       \caption{IoU for binary lane segmentation trained on sim3D dataset with cross entropy, dice and focal loss.}
+        \centering
+        \begin{subfigure}{0.6\textwidth}
+        \includegraphics[width=1\linewidth, height=5cm]{images/IOU_full.png} 
+        \label{fig:subim1}
+        \end{subfigure}
+        \end{figure}
+        
+        
+        \begin{figure}[h]
+       \caption{Qualitative results for binary lane segmentation trained on sim3d dataset for all the lanes present in the scene: (a) SCNN(Res18+Focal Loss) (b) RESA(Res18+Dice Loss) (c)RESA(Res18+Focal Loss)}
+        \centering
+        \begin{subfigure}{0.4\textwidth}
+        \includegraphics[width=1\linewidth, height=4cm]{images/full_res18_scnn_focal.png} 
+        \caption{}
+        \label{fig:subim1}
+        \end{subfigure}
+        \begin{subfigure}{0.4\textwidth}
+        \includegraphics[width=1\linewidth,height=4cm]{images/Resa_r18_full_dice.png}
+        \caption{}
+        \label{fig:subim2}
+        \end{subfigure}
+        \begin{subfigure}{0.4\textwidth}
+        \includegraphics[width=1\linewidth, height=4cm]{images/Resa_r50_full_dice.png}
+        \caption{}
+        \label{fig:subim2}
+        \end{subfigure}
+        \label{fig:image2}
+        \end{figure}
+        
     
     
+        %---------------------------------------------------------------------%
     \section{3D Lane Detection}
     
     \subsubsection{Approach: 1}
     \subsubsection{Approach: 2}
-    \textbf{Remember to dicuss your 2D Lane detection evaluation and how you have chosen to work with particular ones}
     
     
     
-From the equation \textbf{XXX} Cross entropy aims at reducing the pixel-wise error therefore cross entropy only considers loss locally not globally. Thus the statistical distribution of labels can affect the overall loss. The cases where the occurance of one class overpowers the other this condition is called class imbalance.
+
     \textbf{Discuss about the struggles with the dataset and how you have over come it} 
         
     \begin{itemize}
         \item Class imbalance ----->  Class weighting CCE -----> Focal Loss ----> Dice Loss
     \end{itemize}
       
-      
-    \begin{table}[h!]
-    \caption{Cross entropy}
-    \centering
-    \begin{tabular}{|l|l|l|}
-    \hline
-        \textbf{Method} & \textbf{IoU} & \textbf{FPS} \\ \hline
-        SCNN(Res18+TuSimple) & 54.81 & $\approx$ 70  \\ \hline
-        RESA(Res18+TuSimple) & 56.73 & $\approx$ 50 \\\hline
-        SCNN(Res18+CUlane) & 38.1 & $\approx$ 70 \\ \hline
-        RESA(Res18+CUlane) & 43.23 &  $\approx$ 45\\\hline
-        SCNN(Res18+sim3d) & 44.12 & $\approx$ 70 \\ \hline
-        RESA(Res18+sim3d) & 71.79 & $\approx$ 45 \\ \hline
-        RESA(Res50+sim3d) & 74.11 & $\approx$ 40 \\ \hline
-        
-    \end{tabular}
-\end{table}
+
 
 \begin{itemize}
      \item Discuss here quantativelly qualitatively along with scientific arguments what you have done and how you have improved your results for 2d lane detection (class imbalance).
 \end{itemize}
-     \begin{table}[h!]
+     \begin{table}[h]
     \caption{Focal and Dice loss and analyze the results qualitatively too here all trained on sim3d only trained with egovehicle lanes for segmentation \textbf{Add all the difference in qualitative results and the IOU graph}}
     \centering
     \begin{tabular}{|l|l|l|}
@@ -108,7 +230,7 @@ From the equation \textbf{XXX} Cross entropy aims at reducing the pixel-wise err
 \end{table}
     
     
-     \begin{table}[h!]
+     \begin{table}[h]
     \caption{FULL label lane segmentation results with dice and focal loss \textbf{Add all the difference in qualitative results and the IOU graph}}
     \centering
     \begin{tabular}{|l|l|l|}
