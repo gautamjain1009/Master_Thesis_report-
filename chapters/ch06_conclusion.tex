@@ -1,11 +1,19 @@
 %!TEX root = ../report.tex
 
+
 \begin{document}
+
     \chapter{Conclusions}
+    Monocular lane detection in general suffers from a lot of challenges like harsh illumination changes, and occlusion of the derivable area of the road by other vehicles. Also, lane lines are generally thin and long, and the number of pixels occupied by lanes is far lesser than the background pixels making this task even more challenging. Obtaining a robust and accurate 3D position of the lane line can be seen as an important step for lateral and longitudinal control of an autonomous driving vehicle. Moreover, the robust 3D position of the drivable lane lines can facilitate generating an efficient HD map. Most of the existing approaches for 3D lane detection as mentioned in section 3.3.2 have utilized anchor-based representation to detect 3D lane curves. Therefore, they are not able to generalize well on different lane topologies. There exist limited large-scale real-world 3D lane detection datasets which pose another challenge towards achieving a generalized 3D lane detection algorithm.
+     
+    
 
-    \section{Contributions}
+    \section{Summary}
+    In this work, we have utilized task-specific 2D lane segmentation architectures to obtain an efficient binary lane segmentation approach.
+    From the results mentioned in section 5.3.1, we have shown that by replacing an ERFnet \cite{Romera2018ERFNetER} based architecture for binary lane segmentation for the first stage of GenLanenet \cite{guo2020gen} with more complex architectures we can enhance the performance of a dual-stage 3d Lane detector. Following this, GenLaneNet \cite{guo2020gen} trained with complex binary lane segmentation architecture we are able to outperform state of the art 3D lane detection approaches like 3D LaneNet \cite{DBLP:journals/corr/abs-1811-10203}, \cite{9506296}. Moreover, we have achieved significant improvement in the evaluation metrics than reported by GenLaneNet \cite{guo2020gen} itself. Inspired by the dual-stage approach proposed by GenLaneNet \cite{guo2020gen}
+    and anchor-less semi-local approach proposed by \cite{DBLP:journals/corr/abs-2011-01535}, we have proposed a dual stage anchor-less semi-local 3D lane detector. We have chosen the task of 3D lane detection as an auxiliary task whereas the prediction of driving commands is chosen as the main task. Inferring the predictions from the combined multi-task model we can make our end-to-end driving policy more interpretable. This interpretability can further improve the trained end-to-end driving policy and we can make it more fail-safe by training the pipeline with the failed scenarios.  
 
-    \section{Lessons learned}
-
-    \section{Future work}
+    \section{Limitations and Future work}
+    One of the main drawbacks of the proposed dual-stage anchor-less semi-local 3D lane detector is that it is not able to generalize well on different cameras. Inspired from openpilot\footnote{\url{https://github.com/commaai/openpilot}} we can define a virtual camera, all the inputs to the network can be transformed into a virtual camera frame. Thus, making this approach generalize to different cameras. Currently, we have trained the proposed 3D lane detection pipeline on a synthetic 3D lane detection dataset. To make the proposed approach generalize well in real-world scenarios we need to train it on large-scale real-world 3D lane detection datasets like OpenLane \cite{chen2022persformer}. Moreover, we need to solve the issue of global representation of the geometric 3D lane parameters as mentioned in section 5.3.2. After resolving this issue we can extend this approach toward an end-to-end driving-based policy, where 3D lane detection is learned as an auxiliary task.
+    Moreover, we can add more relatable tasks like object detection, and depth estimation which can enhance the performance of the end-to-end driving-based policy. As discussed in section 3.2, multi-task learning, in general, suffers from the problem of task loss balancing, choosing an appropriate schema for task loss balancing is another probable area for future work. For a large multi-task network that is predicting more than one task, it is really important to choose an appropriate feature extractor. We can utilize a specialized multi-task neural network architecture search schema for autonomous driving like MTNAS \cite{10.1007/978-3-030-69535-4_41} to obtain an efficient feature extractor.     
 \end{document}

@@ -2,8 +2,8 @@
 
 \begin{document}
     \chapter{Introduction}
-    In recent years with the development of deep learning and improvement in hardware has lead to advancement of Autonomous driving technology rapidly. Traditionally modular methods were used for self-driving systems. In modular self-driving software stack we have independent modules like perception, path-planning, localisation, control which are generally interconnected to each other. The main advantage of modular methods is that they are interpret-able in case of any faulty modules but maintaining and developing such modules is costly and time consuming. Moreover modular based stacks are still far from complete autonomy for autonomous driving.
-    \par Nowadays research in autonomous driving is shifted towards end-to-end based approaches. In end-to-end autonomous driving all the sensory inputs are fed into a single neural network architecture, which is responsible for lateral and longitudinal control of the car. End-to-end driving pipeline is generally simpler than a modular stack, which is trained in a supervised manner using imitation learning techniques \cite{DBLP:journals/corr/abs-1710-02410}, \cite{pan2019agile} where a neural network is trained to mimic expert human driving behavior or sometimes by exploring the environment and learning the driving policy by reinforcement learning based techniques \cite{DBLP:journals/corr/abs-1807-00412}. 
+    In recent years the development of deep learning and improvement in hardware has led to the advancement of Autonomous driving technology rapidly. Traditionally modular methods were used for self-driving systems. In a modular self-driving software stack we have independent modules like perception, path-planning, localization, and control which are generally interconnected to each other. The main advantage of modular methods is that they are interpretable in case of any faulty modules but maintaining and developing such modules is costly and time-consuming. Moreover, modular-based stacks are still far from complete autonomy for autonomous driving.
+    \par Nowadays research in autonomous driving is shifted towards end-to-end based approaches. In end-to-end autonomous driving, all the sensory inputs are fed into a single neural network architecture, which is responsible for lateral and longitudinal control of the car.  An End-to-end driving pipeline is generally simpler than a modular stack, which is trained in a supervised manner using imitation learning techniques \cite{DBLP:journals/corr/abs-1710-02410}, \cite{pan2019agile} where a neural network is trained to mimic expert human driving behavior or sometimes by exploring the environment and learning the driving policy by reinforcement learning based techniques \cite{DBLP:journals/corr/abs-1807-00412}.  
 
      \begin{figure}[h]
     \centering
@@ -21,9 +21,8 @@
     \caption{End-to-end autonomous driving with auxiliary tasks \cite{Wang2019EndtoEndSU}}
 \end{figure}
 
-\par In general these auxiliary tasks share same intermediate layers in the network and any failure in the auxiliary task will indicate the presence of incomplete information in the scene. These tasks are optimized simultaneously using multiple loss functions or a combined weighted loss function according to importance of task. Optimizing such auxiliary task along with the main task helps the network to learn better the internal representations of the scene as some tasks share some meaningful information. Thus such approaches of learning auxiliary tasks along with the main driving task can be categorized as a multi-task learning problem. Multi-task learning has provided concrete results on applications of machine learning like Natural language processing \cite{nlp}, computer vision \cite{DBLP:journals/corr/abs-2002-05347}, speech recognition \cite{qiu2021multitask}.     
-
-End-to-end autonomous driving via imitation learning in general suffers from other challenges like: 
+\par In general these auxiliary tasks share the same intermediate layers in the network and any failure in the auxiliary task will indicate the presence of incomplete information in the scene. These tasks are optimized simultaneously using multiple loss functions or a combined weighted loss function according to the importance of the task. Optimizing such auxiliary tasks along with the main task helps the network to learn better the internal representations of the scene as some tasks share some meaningful information. Thus such approaches to learning auxiliary tasks along with the main driving task can be categorized as  multi-task learning problems. Multi-task learning has provided concrete results on applications of machine learning like Natural language processing \cite{nlp}, computer vision \cite{DBLP:journals/corr/abs-2002-05347}, speech recognition \cite{qiu2021multitask}.    
+End-to-end autonomous driving via imitation learning, in general suffers from other challenges like: 
 
 \begin{itemize}
 \item Causal confusion.
@@ -35,14 +34,14 @@ End-to-end autonomous driving via imitation learning in general suffers from oth
 \end{itemize}
 
     \section{Problem Statement}
-    This project aims at predicting road lanes in 3D and driving commands using single or sequence of monocular images in an end-to-end manner. The whole task in general can be treated as a multitask learning problem where 3d lane detection is obtained as an auxiliary task. The project further aims to investigate the following.
+    This project aims at predicting road lanes in 3D and driving commands using a single or sequence of monocular images in an end-to-end manner. The whole task in general can be treated as a multitask learning problem where 3d lane detection is obtained as an auxiliary task. The project further aims to investigate the following.
     
     \begin{itemize}
  \item Efficacy of using 3d lane detection as an auxiliary task to enhance the performance of the main task that is driving commands.
 \item Interpretability of the pipeline by introducing auxiliary tasks. 
-\item Can multitask learning improve generalisation? 
-\item Can task loss balancing favour the performance of the main task?  
+\item Can multitask learning improve generalization? 
+\item Can task loss balancing favor the performance of the main task?  
 \end{itemize}
 
-3D lane detection pipeline will be trained and evaluated on a synthetic dataset Apollo 3D \cite{guo2020gen}. Where as, training for driving commands can be carried out via any large scale autonomous driving dataset which contain video data and vehicle canbus information like Comma2k19 \cite{1812.05752},  Cityscapes \cite{DBLP:journals/corr/CordtsORREBFRS16}, Nuscenes \cite{DBLP:journals/corr/abs-1903-11027}.
+3D lane detection pipeline will be trained and evaluated on a synthetic Apollo 3D \cite{guo2020gen} dataset. Whereas, training for driving commands can be carried out via any large scale autonomous driving dataset which contain video data and vehicle canbus information like Comma2k19 \cite{1812.05752},  Cityscapes \cite{DBLP:journals/corr/CordtsORREBFRS16}, Nuscenes \cite{DBLP:journals/corr/abs-1903-11027}.
 \end{document}

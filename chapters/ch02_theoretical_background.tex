@@ -2,12 +2,12 @@
 
 \begin{document}
     \chapter{Theoretical Background}
-    In this chapter the we will introduce the reader with the theoretical primers needed to comprehend this work in depth. 
+    In this chapter, we will introduce the reader to the theoretical primers needed to comprehend this work in depth. 
 
     \section{Camera Geometry}
-    A camera in simple words is mapping or projecting of 3d world points on an image plane. To understand how this mapping works we need to understand first the camera model which is defined using the tools of geometry. In computer there are two typed of camera models finite and infinite, which are divided on the basis of the distance of camera from the 3D real world points. In finite camera model the camera center lies at the finite distance distance from the 3D world point where this is vice versa in infinite camera model. In our case we will consider the finite camera model as it forms the basis of camera systems we use in the real world. 
+    A camera in simple words is mapping or projecting of 3d world points on an image plane. To understand how this mapping works we need to understand first the camera model which is defined using the tools of geometry. In computer vision, there are two types of camera models finite and infinite, which are divided based on the distance of the camera from the 3D real-world points. In the finite camera model, the camera center lies at a finite distance from the 3D world point and this is vice versa in the infinite camera model. In our case, we will consider the finite camera model as it forms the basis of the camera systems we use in the real world. 
     
-    Generally the camera mapping or projection of 3d world point on the image plane is represented by camera matrix which is of size $3x4$, this matrix has 11 degrees of freedom. This matrix is can be divided into intrinsic and extrinsic camera matrix. To derive this camera mapping first we need to understand what is pin hole camera geometry. 
+    Generally, the camera mapping or projection of the 3D world point on the image plane is represented by a camera matrix which is of size $3x4$, this matrix has 11 degrees of freedom. This matrix is can be divided into intrinsic and extrinsic camera matrices. To derive this camera mapping first we need to understand what is pinhole camera geometry. 
     
      \begin{figure}[h]
     \centering
@@ -15,7 +15,7 @@
     \caption{Pinhole camera geometry \cite{10.5555/861369}}
     \end{figure}
     
-    Considering the central projection of 3D point \txtbf{X} on to the image plane. Let the camera center is at the center of origin of euclidean space. The image plane is at distance $z = f$. Pinhole camera model maps the point  \textbf{X} $ = (X, Y, Z)^{T}$ to the image plane, where a line from point \textbf{X} intersects the image plane at point \textbf{x} and meets the center of projection. This center of projection is also called camera center or optical center. Thus, using the similar triangles we can compute the mapping of $ (X, Y, Z)^{T}$ to $(fX/Z, fY/Z, f)^{T}$ which lies on the image plane. Therefore this projection can be seen as the mapping from $IR^{3}$ to $IR^{2}$ in euclidean space. 
+    Considering the central projection of 3D point \txtbf{X} onto the image plane. Let the camera center is at the center of origin of euclidean space. The image plane is at distance $z = f$. Pinhole camera model maps the point  \textbf{X} $ = (X, Y, Z)^{T}$ to the image plane, where a line from point \textbf{X} intersects the image plane at point \textbf{x} and meets the center of projection. This center of projection is also called the camera center or optical center. Thus, using similar triangles we can compute the mapping of $ (X, Y, Z)^{T}$ to $(fX/Z, fY/Z, f)^{T}$ which lies on the image plane. Therefore this projection can be seen as the mapping from $IR^{3}$ to $IR^{2}$ in euclidean space.  
     
     Assuming the world and image points to be homogeneous vectors this mapping can be represented as:
   \begin{equation}
@@ -23,8 +23,8 @@
 \end{equation}
 
     
-The above equation can be represented as  $X^{‘} = PX $. Where X is the real world point represented in the homogeneous coordinates as $(X, Y, Z, 1)^{T}$ and P is a $3x4$ homogeneous matrix called camera projection matrix. P in this case can be rewritten as $diag(f,f,1) [I|0]$, where diag(f,f,1) is a $3x3$ matrix and $[I|0]$ is a zero column vector. 
-Generally the origin of coordinated is not at the optical center, there exists some offset. So the mapping in that case will change: 
+The above equation can be represented as  $X^{‘} = PX $. Where X is the real-world point represented in the homogeneous coordinates as $(X, Y, Z, 1)^{T}$ and P is a $3x4$ homogeneous matrix called camera projection matrix. P in this case can be rewritten as $diag(f,f,1) [I|0]$, where diag(f,f,1) is a $3x3$ matrix and $[I|0]$ is a zero column vector. 
+Generally, the origin of coordinates is not at the optical center, there exists some offset. So the mapping, in that case, will change: 
 \begin{equation}
 (X,Y,Z)^{T} \rightarrow (fX/Z + p_{x}, fY/Z + p_{y})^{T}
 \end{equation}
@@ -35,7 +35,7 @@ Generally the origin of coordinated is not at the optical center, there exists s
 \begin{equation}
 And  K =  \begin{bmatrix}f & &p_{x} \\  &f &p_{y}  \\   & &1    \end{bmatrix}
 \end{equation}
- Here K is called camera calibration matrix. The 3D world point is generally in the world coordinate frame and in most of the cases there exists some rotation and translation between the camera coordinate frame and world coordinate frame.
+ Here K is called the camera calibration matrix. The 3D world point is generally in the world coordinate frame and in most cases, there exists some rotation and translation between the camera coordinate frame and world coordinate frame.
  
     \begin{figure}[h]
     \centering
@@ -43,24 +43,24 @@ And  K =  \begin{bmatrix}f & &p_{x} \\  &f &p_{y}  \\   & &1    \end{bmatrix}
     \caption{ Real world coordinates are transformed to camera coordinate frame using extrinsic matrix \cite{10.5555/861369}}
     \end{figure}
     
-    This rotation and translation is generally represented as 3x4 matrix, $[R | C ]$ called extrinsic matrix, where $R$ is the rotation matrix and $C$ is the translation matrix. The above derived mapping assumes that the image plane is of similar scale in x and y direction, but in most of the cases it is not true. To counter this problem with the assumption that image coordinates are represented in the form of pixels we will introduce a scale factor here in x and y direction as $m_{x}$ and $m_{y}$ and we further introduce on more factor called skew coefficient $s$ in the cases when x and y axis of camera frames are not perpendicular to each other. Thus the resulting camera matrix can be represented as:
+    This rotation and translation are generally represented as a 3x4 matrix, $[R | C ]$ called extrinsic matrix, where $R$ is the rotation matrix and $C$ is the translation matrix. The above-derived mapping assumes that the image plane is of similar scale in x and y directions, but in most cases, it is not true. To counter this problem with the assumption that image coordinates are represented in the form of pixels we will introduce a scale factor here in the x and y direction as $m_{x}$ and $m_{y}$ and we further introduce on more factor called skew coefficient $s$ in the cases when x and y axis of camera frames are not perpendicular to each other. Thus the resulting camera matrix can be represented as:
         \begin{equation}
 K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0 &1 \end{bmatrix}
     \end{equation}
     
-    So we can summarize this mapping from real world to camera plane, first the real world coordinates are transferred to camera coordinate frame via extrinsic matrix and the resulting points in camera coordinate frames are projected to image plane using camera matrix or intrinsic matrix. 
+    So we can summarize this mapping from the real world to the camera plane, first, the real-world coordinates are transferred to the camera coordinate frame via an extrinsic matrix, and the resulting points in camera coordinate frames are projected to the image plane using the camera matrix or intrinsic matrix. 
         \begin{figure}[h]
     \centering
     \includegraphics[width=8cm, height =4cm]{images/extrinsic_intrinsic.png}
-    \caption{ Projection of a real world point onto image plane using camera geometry \cite{10.5555/861369}}
+    \caption{ Projection of a real-world point onto image plane using camera geometry \cite{10.5555/861369}}
     \end{figure}
     
    
    
     \section{Inverse Perspective Mapping (IPM)}
-     In computer vision inverse perspective transformation can be seen as a scenario where we obtain birds-eye-view image of the scene using front-facing camera image. To understand how the inverse perspective mapping we need to build some basic concepts about camera geometry which we discussed in the last section, homography and 2D perspective transformation. In autonomous driving IPM can be seen as an alternative way to feed the network with extra information about scene and it is explored in tasks like lane detection, BEV segmentation, path planning and more. 
+     In computer vision, inverse perspective transformation can be seen as a scenario where we obtain a birds-eye-view image of the scene using a front-facing camera image. To understand how the inverse perspective mapping we need to build some basic concepts about camera geometry which we discussed in the last section, homography, and 2D perspective transformation. In autonomous driving, IPM can be seen as an alternative way to feed the network with extra information about the scene and it is explored in tasks like lane detection, BEV segmentation, path planning, and more. 
      
-     By definition homography is the way we can transform one projective plane to another plane using a transformation matrix called \textbf{H} and in this work we have used homography based IPM to take the front facing camera image to BEV. These transformation generally comes under the category of perspective transformation. Popularly there exists two types of transformations in projective geometry called as affine and perspective transformation. Example of affine transformation are translation, rotation, dilation. Affine transformations generally maps lines to lines, points to points and parallel lines stay parallel. Where as in the case of perspective transformation can hold only geometrical properties like will remain line and it retains col-linearity of points. Under perspective transformation two parallel lines can not stay parallel and they generally meet at a point at infinity which is called as vanishing point. The pin hole camera model that we have discussed above follows the principal of perspective transformation of a real world point to the camera image plane and the camera matrix that we have discussed is basically a homography matrix. Generally this camera matrix is obtained via association of 4 or more same points in the multiple images taken from same camera and this task is called camera calibration. 
+     By definition, homography is the way we can transform one projective plane to another plane using a transformation matrix called \textbf{H} and in this work, we have used homography-based IPM to take the front-facing camera image to BEV. These transformations generally come under the category of perspective transformation. Popularly there exist two types of transformations in projective geometry called affine and perspective transformation. Examples of affine transformation are translation, rotation, and dilation. Affine transformations generally map lines to lines, points to points and parallel lines stay parallel. Whereas in the case of perspective transformation can hold only geometrical properties like will remain line and it retains col-linearity of points. Under perspective transformation, two parallel lines can not stay parallel and they generally meet at a point at infinity which is called the vanishing point. The pinhole camera model that we have discussed above follows the principle of perspective transformation of a real-world point to the camera image plane and the camera matrix that we have discussed is basically a homography matrix. Generally, this camera matrix is obtained via the association of 4 or more same points in the multiple images taken from the same camera and this task is called camera calibration. 
      
             \begin{figure}[h]
     \centering
@@ -68,12 +68,12 @@ K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0
     \caption{ Geometric representation of a driving scenario \cite{DBLP:journals/corr/abs-1811-10203}}
     \end{figure}
     
-     Most basic assumption in IPM is that we assume that the ground to be a flat plane and we then we map all the pixels from the front facing view to the flat ground plane with the help of homography. Moreover there exists some constraints for IPM to work like camera should be in fixed position as a small change in the position of camera can change the camera height and pitch with respect to the road and it can completely change how the scene is projected on the image plane, any object in the scene with certain height will cause distortions or artifacts in the BEV image and same can be seen with the points or objects lying above the ground. Now we will discuss in detail how to perform IPM. 
+     The most basic assumption in IPM is that we assume that the ground is a flat plane and we then we map all the pixels from the front-facing view to the flat ground plane with the help of homography. Moreover, there exist some constraints for IPM to work like the camera should be in a fixed position as a small change in the position of the camera can change the camera height and pitch with respect to the road and it can completely change how the scene is projected on the image plane, any object in the scene with certain height will cause distortions or artifacts in the BEV image and same can be seen with the points or objects lying above the ground. Now we will discuss in detail how to perform IPM. 
      
      \textbf{Step: A Define a top view region \newline} 
-     First step for IPM is to define a top view region and we want this plane to be consistent with the moving vehicle. The origin of top view region plane is at the top left corner. Generally we start with deciding the width and height of this plane this defining the resolution per pixel. 
+     The first step for IPM is to define a top view region and we want this plane to be consistent with the moving vehicle. The origin of the top view region plane is at the top left corner. Generally, we start with deciding the width and height of this plane defining the resolution per pixel. 
      
-     Let $(ipm_{width}, ipm_{height} = 256, 416)$ and top view region edge points to be $[-10, 103], [10, 103], [-10, 3], [10, 3]$. Similarly the IPM boundry points can be represented as $[0, 0],
+     Let $(ipm_{width}, ipm_{height} = 256, 416)$ and top view region edge points to be $[-10, 103], [10, 103], [-10, 3], [10, 3]$. Similarly, the IPM boundary points can be represented as $[0, 0],
                                                               [ipm_{width}, 0],
                                                               [0, ipm_{height}-1],
                                                               [ipm_{width}, ipm_{height}]$
@@ -83,7 +83,7 @@ K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0
      Thus, obtaining $T^{ground}_{ipm}$
      
      \textbf{Step: C Obtain homography from ground to image} \newline
-     Obtaining camera pitch, height and camera intrinsics and using camera projection matrix we can obtain the transformation from ground to image. 
+     By obtaining camera pitch, height, and camera intrinsics and using the camera projection matrix we can obtain the transformation from ground to image. 
      \begin{equation}
      T_{ground}^{camera } = \begin{bmatrix}1 & 0 & 0 & 0 \\0 & cos(\frac{\pi}{2} + pitch_{cam}) & -sin(\frac{\pi}{2} + pitch_{cam}) & height_{cam} \\ 0 &sin(\frac{\pi}{2} + pitch_{cam}) &cos(\frac{\pi}{2} + pitch_{cam}) & 0   \end{bmatrix}
      \end{equation}
@@ -126,11 +126,11 @@ K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0
     
     \section{Hough Transform}
     
-    The Hough transform is a feature extraction technique used in image analysis, computer vision, and digital image processing. The purpose of the technique is to find imperfect instances of objects within a certain class of shapes by a voting procedure. \footnote{\url{https://en.wikipedia.org/wiki/Hough_transform}}
+    The Hough Transform is a feature extraction technique used in image analysis, computer vision, and digital image processing. The purpose of the technique is to find imperfect instances of objects within a certain class of shapes by a voting procedure. \footnote{\url{https://en.wikipedia.org/wiki/Hough_transform}}
     
-    Generally Hough transform is used for detecting lines in an image but it is also applicable to detecting circles and ellipsoidal curves in an image. Hough transform is applied on images after edge detection is performed on it. Edge detection is a technique which identifies boundaries or edges of certain objects in the image on the basis of change in brightness across the pixels. Let's assume we are trying to find lines in an image, in that sense edges are sequence of pixels with certain slope and intercepts. To detect lines in this image we need to loop through all the pixels with same intercept and slope, this is where Hough transforms comes handy. In simple words Hough transform helps to find lines by giving weight-age to the pixels that are already in a line. 
+    Generally, Hough Transform is used for detecting lines in an image but it is also applicable to detecting circles and ellipsoidal curves in an image. Hough transform is applied to images after edge detection is performed on them. Edge detection is a technique that identifies boundaries or edges of certain objects in the image based on the change in brightness across the pixels. Let's assume we are trying to find lines in an image, in that sense edges, are a sequence of pixels with certain slopes and intercepts. To detect lines in this image we need to loop through all the pixels with the same intercept and slope, this is where Hough transforms comes in handy. In simple words, Hough Transform helps to find lines by giving weightage to the pixels that are already in a line. 
     
-    Before indulging into the workings of the Hough transform, we need to understand the basic idea how the Hough transform works. A line can be represented by minimal two points and it has an intercept and a slope. Similarly a line can also be represented by a single point in mc space.
+    Before indulging in the working of the Hough Transform, we need to understand the basic idea of how the Hough Transform works. A line can be represented by minimal two points and it has an intercept and a slope. Similarly, a line can also be represented by a single point in mc space.
     
                 \begin{figure}[h]
     \centering
@@ -138,7 +138,7 @@ K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0
     \caption{Representation of a line}
     \end{figure}
     
-    Similarly we can say that a point in Cartesian space can be represented as infinite lines in mc space as infinite lines can pass from a point in Cartesian space. So, Hough transform does the same converting points in Cartesian space to lines in mc space. Therefore for an edge image, where the pixels are non black we can draw lines in mc space. Some lines will intersect at a particular point and that intersection point is this slope and intercept of those lines. 
+    Similarly, we can say that a point in Cartesian space can be represented as infinite lines in mc space as infinite lines can pass from a point in Cartesian space. So, Hough Transform does the same converting points in Cartesian space to lines in mc space. Therefore for an edge image, where the pixels are nonblack, we can draw lines in mc space. Some lines will intersect at a particular point and that intersection point is this slope and intercept of those lines. 
     
                     \begin{figure}[h]
     \centering
@@ -146,7 +146,7 @@ K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0
     \caption{Representation of a point}
     \end{figure}
     
-    From the pixels points to line in mc space, when more than one lines intersects in mc space it means that those pixels belong to the same line in Cartesian space and that line's parameter is represented by the intersecting point. 
+    From the pixels points to a line in mc space, when more than one line intersects in mc space it means that those pixels belong to the same line in Cartesian space and that line's parameter is represented by the intersecting point. 
     
                  \begin{figure}[h]
     \centering
@@ -154,7 +154,7 @@ K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0
     \caption{Representation of a set of points}
     \end{figure}
     
-    We can not represent lines with slope and intercept in Hough space algorithmically, as in the case of vertical lines the slope can be undefined or infinity. Therefore the straight line is represented in the form of polar coordinates, $\rho = xcos(\theta) + ysin(\theta) $ is the equation of normal line where $\rho$ is the length of the normal line and $\theta$ is the angle between normal line and the x axis. 
+    We can not represent lines with slope and intercept in Hough space algorithmically, as in the case of vertical lines the slope can be undefined or infinity. Therefore the straight line is represented in the form of polar coordinates, $\rho = xcos(\theta) + ysin(\theta) $ is the equation of the normal line where $\rho$ is the length of the normal line and $\theta$ is the angle between the normal line and the x-axis. 
     
     \begin{figure}[h]
     \centering
@@ -162,32 +162,32 @@ K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0
     \caption{Representation of line in the normal form}
     \end{figure}
     
-    Every point is represented by cosine curves in the Hough space, thus we can map all the edge points from an edge image to Hough space. If two points lie on the same edge or line their cosine curves will intersect at some $(\rho,\theta)$ pair, as mentioned above the Hough transform algorithm will find the $(\rho,\theta)$ pair for which the number of intersections are larger than a certain threshold. \newline 
+     Every point is represented by cosine curves in the Hough space, thus we can map all the edge points from an edge image to Hough space. If two points lie on the same edge or line their cosine curves will intersect at some $(\rho,\theta)$ pair, as mentioned above the Hough transform algorithm will find the $(\rho,\theta)$ pair for which the number of intersections is larger than a certain threshold. \newline 
     
     
     \underline{\textbf{Algorithm:}} \newline
-    \textbf{1.} Assuming origin of the image is at the top left corner and decide the range of $\rho$ and $\phi$. In most of the cases $\theta:[0, 180]$ degrees and $\rho:[-d,d]$ where d is length of the diagonal of the edge image. \newline
-    \textbf{2.} Initialize an array called as accumulator with dimension $(number of rhos, and number of thetas)$ which are sampled over a specific interval. \newline
+    \textbf{1.} Assuming the origin of the image is at the top left corner and decide the range of $\rho$ and $\phi$. In most of the cases, $\theta:[0, 180]$ degrees and $\rho:[-d,d]$ where d is the length of the diagonal of the edge image. \newline
+    \textbf{2.} Initialize an array called an accumulator with dimension $(number of rhos, and number of thetas)$ which are sampled over a specific interval. \newline
     \textbf{3.} Edge detection is carried out on the image before performing Hough transform.\newline 
-    \textbf{4.} Loop through the pixels of edge image and check if that pixel is edge pixel. In case, if it is an edge pixel we loop thought all the values of $\theta$ and obtaining the corresponding $\rho$. For every $(\rho, \theta)$ pair while looping we increment the value in the accumulator at the particular index of $\rho$ and $\theta$. \newline
-    \textbf{5.} To obtain the detected lines, the valued in the accumulator are checked and for a respective $(\rho,\theta)$ pair the value is greater than some threshold it is considered as a line, where $(\rho,\theta)$ pair can be mapped to Cartesian space.  
+    \textbf{4.} Loop through the pixels of the edge image and check if that pixel is an edge pixel. In case, if it is an edge pixel we loop through all the values of $\theta$ and obtain the corresponding $\rho$. For every $(\rho, \theta)$ pair while looping we increment the value in the accumulator at the particular index of $\rho$ and $\theta$. \newline
+    \textbf{5.} To obtain the detected lines, the values in the accumulator are checked and for a respective $(\rho,\theta)$ pair the value is greater than some threshold it is considered as a line, where $(\rho,\theta)$ pair can be mapped to Cartesian space.  
     
     \section{A Brief Guide to Convolutional Neural Networks}
-    Before the deep learning went mainstream we used handcrafted feature extractors to extract features form the data to achieve certain tasks related to machine learning.
-    After that convolutional neural networks became bread and butter for every task related to deep learning where images were involved. 
+    Before deep learning went mainstream we used handcrafted feature extractors to extract features from the data to achieve certain tasks related to machine learning.
+    After that convolutional neural networks became the bread and butter for every task related to deep learning where images were involved. 
     
-    Convolution are generally represented as affine transformations where an input matrix is multiplied by another matrix to obtain output and usually a bias vector b is added to the output before it is passed through a non linear function. Like every affine transformation CNN's are invariant to translation, scale and rotation that makes them a really powerful feature extractors. CNN's extract hierarchical features from image patches, the initial layers generally extract low level features, where as the later layers extract mid to high level features. In this section we will briefly explain the arithmetic's behind the working of a CNN in different settings. 
+    Convolutions are generally represented as affine transformations where an input matrix is multiplied by another matrix to obtain output and usually a bias vector b is added to the output before it is passed through a nonlinear function. Like every affine transformation, CNN's are invariant to translation, scale, and rotation which makes them powerful feature extractors. CNN's extract hierarchical features from image patches, the initial layers generally extract low-level features, whereas the later layers extract mid to high-level features. In this section, we will briefly explain the arithmetic behind the working of a CNN in different settings. 
     
-    Data like images, sound clips can be represented in a similar structure which can be processed by CNN's for feature extraction. Such kinda data is in the form of multi-dimensional arrays where the ordering of axes plays an important role in terms of information representation, and CNN's preserve this ordering and performs affine transformation sparsely while reusing the parameters to generate the output with the help of discrete convolutions. 
+    Data like images and sound clips can be represented in a similar structure which can be processed by CNN's for feature extraction. Such kinda data is in the form of multi-dimensional arrays where the ordering of axes plays an important role in terms of information representation, and CNN's preserve this ordering and perform affine transformation sparsely while reusing the parameters to generate the output with the help of discrete convolutions. 
      \begin{figure}[h]
     \centering
     \includegraphics[width=10cm, height =6cm]{images/discrete_cnn.png}
     \caption{Computing output values of a discrete convolution \cite{https://doi.org/10.48550/arxiv.1603.07285}}
     \end{figure}
     
-    Single or more than one kernel or filter generally slides across the all the input to generate the output. At each location element wise multiplication and addition is performed to generate an output popularly called as output feature maps and the same goes for the scenario when we have a multidimensional input feature map. 
+    Single or more than one kernel or filter generally slides across all the input to generate the output. At each location element-wise multiplication and addition are performed to generate an output popularly called output feature map and the same goes for the scenario when we have a multidimensional input feature map. 
     
-    Pooling is also one of the main building blocks of CNN's which are generally used to reduce the spatial size in keeping the useful extracted information. Pooling also uses sliding window protocol on the input or feature maps. It can be seen as same as discreet convolution, the only difference is that no linear combination of values takes place, they are replaced by taking average over all the element wise product values or sometimes maximum value is taken. 
+    Pooling is also one of the main building blocks of CNN which is generally used to reduce the spatial size in keeping the useful extracted information. Pooling also uses sliding window protocol on the input or feature maps. It can be seen as the same as discreet convolution, the only difference is that no linear combination of values takes place, they are replaced by taking the average over all the element-wise product values, or sometimes maximum value is taken. 
     \begin{figure}[h]
     \centering
     \includegraphics[width=10cm, height =6cm]{images/pooling_cnn.png}

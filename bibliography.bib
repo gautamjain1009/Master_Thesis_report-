@@ -1002,7 +1002,6 @@ year={2021}
 }
 
 
-
 @article{DBLP:journals/corr/ToshniwalTLL17,
   author    = {Shubham Toshniwal and
                Hao Tang and
@@ -1339,5 +1338,38 @@ year={2021}
   eprint    = {1708.02551},
   timestamp = {Mon, 13 Aug 2018 16:47:23 +0200},
   biburl    = {https://dblp.org/rec/journals/corr/abs-1708-02551.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{10.1007/978-3-030-69535-4_41,
+author = {Liu, Hao and Li, Dong and Peng, JinZhang and Zhao, Qingjie and Tian, Lu and Shan, Yi},
+title = {MTNAS: Search Multi-Task Networks for Autonomous Driving},
+year = {2020},
+isbn = {978-3-030-69534-7},
+publisher = {Springer-Verlag},
+address = {Berlin, Heidelberg},
+url = {https://doi.org/10.1007/978-3-030-69535-4_41},
+doi = {10.1007/978-3-030-69535-4_41},
+abstract = {Multi-task learning (MTL) aims to learn shared representations from multiple tasks simultaneously, which has yielded outstanding performance in widespread applications of computer vision. However, existing multi-task approaches often demand manual design on network architectures, including shared backbone and individual branches. In this work, we propose MTNAS, a practical and principled neural architecture search algorithm for multi-task learning. We focus on searching for the overall optimized network architecture with task-specific branches and task-shared backbone. Specifically, the MTNAS pipeline consists of two searching stages: branch search and backbone search. For branch search, we separately optimize each branch structure for each target task. For backbone search, we first design a pre-searching procedure t1o pre-optimize the backbone structure on ImageNet. We observe that searching on such auxiliary large-scale data can not only help learn low-/mid-level features but also offer good initialization of backbone structure. After backbone pre-searching, we further optimize the backbone structure for learning task-shared knowledge under the overall multi-task guidance. We apply MTNAS to joint learning of object detection and semantic segmentation for autonomous driving. Extensive experimental results demonstrate that our searched multi-task model achieves superior performance for each task and consumes less computation complexity compared to prior hand-crafted MTL baselines. Code and searched models will be released at .},
+booktitle = {Computer Vision – ACCV 2020: 15th Asian Conference on Computer Vision, Kyoto, Japan, November 30 – December 4, 2020, Revised Selected Papers, Part III},
+pages = {670–687},
+numpages = {18},
+keywords = {Multi-task learning, Autonomous driving, Neural architecture search},
+location = {Kyoto, Japan}
+}
+@article{DBLP:journals/corr/abs-1908-00821,
+  author    = {Yuenan Hou and
+               Zheng Ma and
+               Chunxiao Liu and
+               Chen Change Loy},
+  title     = {Learning Lightweight Lane Detection CNNs by Self Attention Distillation},
+  journal   = {CoRR},
+  volume    = {abs/1908.00821},
+  year      = {2019},
+  url       = {http://arxiv.org/abs/1908.00821},
+  eprinttype = {arXiv},
+  eprint    = {1908.00821},
+  timestamp = {Sat, 23 Jan 2021 01:11:05 +0100},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-1908-00821.bib},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
