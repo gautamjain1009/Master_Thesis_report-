@@ -40,10 +40,10 @@ And  K =  \begin{bmatrix}f & &p_{x} \\  &f &p_{y}  \\   & &1    \end{bmatrix}
     \begin{figure}[h]
     \centering
     \includegraphics[width=8cm, height =4cm]{images/camera_geo.png}
-    \caption{ Real world coordinates are transformed to camera coordinate frame using extrinsic matrix \cite{10.5555/861369}}
+    \caption{ Real world coordinates \cite{10.5555/861369} are transformed to camera coordinate frame using extrinsic matrix }
     \end{figure}
     
-    This rotation and translation are generally represented as a 3x4 matrix, $[R | C ]$ called extrinsic matrix, where $R$ is the rotation matrix and $C$ is the translation matrix. The above-derived mapping assumes that the image plane is of similar scale in x and y directions, but in most cases, it is not true. To counter this problem with the assumption that image coordinates are represented in the form of pixels we will introduce a scale factor here in the x and y direction as $m_{x}$ and $m_{y}$ and we further introduce on more factor called skew coefficient $s$ in the cases when x and y axis of camera frames are not perpendicular to each other. Thus the resulting camera matrix can be represented as:
+    This rotation and translation are generally represented as a 3x4 matrix, $[R | C ]$ called extrinsic matrix, where $R$ is the rotation matrix and $C$ is the translation matrix. The above-derived mapping assumes that the image plane is of similar scale in x and y directions, but in most cases, it is not true. To counter this problem with the assumption that image coordinates are represented in the form of pixels we will introduce a scale factor here in the x and y direction as $\alpha_{x}$ and $\alpha_{y}$ and we further introduce on more factor called skew coefficient $s$ in the cases when x and y axis of camera frames are not perpendicular to each other. Thus the resulting camera matrix can be represented as:
         \begin{equation}
 K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0 &1 \end{bmatrix}
     \end{equation}
@@ -260,7 +260,7 @@ K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0
    \end{center}
     
 
-    \section{Scene Understating via Semantic Segmentation}
+    \section{Scene Understanding via Semantic Segmentation}
     In this section we will briefly introduce the task of semantic segmentation with respect to the deep learning side of the problem and the role it plays in scene understanding in autonomous driving. Semantic segmentation is a dense prediction task where we predict label for each pixel in the image, unlike classification where we assign one label for the whole image.
     
     In simple words semantic segmentation performs three steps: \newline
