@@ -15,25 +15,25 @@
     \caption{Pinhole camera geometry \cite{10.5555/861369}}
     \end{figure}
     
-    Considering the central projection of 3D point \txtbf{X} onto the image plane. Let the camera center is at the center of origin of euclidean space. The image plane is at distance $z = f$. Pinhole camera model maps the point  \textbf{X} $ = (X, Y, Z)^{T}$ to the image plane, where a line from point \textbf{X} intersects the image plane at point \textbf{x} and meets the center of projection. This center of projection is also called the camera center or optical center. Thus, using similar triangles we can compute the mapping of $ (X, Y, Z)^{T}$ to $(fX/Z, fY/Z, f)^{T}$ which lies on the image plane. Therefore this projection can be seen as the mapping from $IR^{3}$ to $IR^{2}$ in euclidean space.  
+    In the figure 2.1, a 3D point \textbf{X} is projected on the image plane. Assuming the camera center is located at the origin of the Eucledian space. The image plane is at distance $z = f$. Pinhole camera model maps the point  \textbf{X} $ = (X, Y, Z)^{T}$ to the image plane, where a line from point \textbf{X} intersects the image plane at point \textbf{x} and meets the center of projection. This center of projection is also called the camera center or optical center. Thus, using similar triangles we can compute the mapping of $ (X, Y, Z)^{T}$ to $(fX/Z, fY/Z, f)^{T}$ which lies on the image plane. Therefore this projection can be seen as the mapping from $IR^{3}$ to $IR^{2}$ in euclidean space.  
     
-    Assuming the world and image points to be homogeneous vectors this mapping can be represented as:
+    Assuming the world and image points to be homogeneous vectors this mapping can be represented as \cite{10.5555/861369}:
   \begin{equation}
 \left(\begin{array}{c}X \\ Y \\ Z \\ 1 \end{array}\right) \rightarrow \left(\begin{array}{c} fX \\ fY \\ Z \end{array}\right) = \begin{bmatrix}f & & & 0 \\  &f & & 0  \\   & &1 & 0   \end{bmatrix}\left(\begin{array}{c}X\\ Y  \\Z \\ 1 \end{array}\right)
 \end{equation}
 
     
 The above equation can be represented as  $X^{‘} = PX $. Where X is the real-world point represented in the homogeneous coordinates as $(X, Y, Z, 1)^{T}$ and P is a $3x4$ homogeneous matrix called camera projection matrix. P in this case can be rewritten as $diag(f,f,1) [I|0]$, where diag(f,f,1) is a $3x3$ matrix and $[I|0]$ is a zero column vector. 
-Generally, the origin of coordinates is not at the optical center, there exists some offset. So the mapping, in that case, will change: 
+Generally, the origin of coordinates is not at the optical center, there exists some offset. So the mapping, in that case, will change \cite{10.5555/861369}: 
 \begin{equation}
 (X,Y,Z)^{T} \rightarrow (fX/Z + p_{x}, fY/Z + p_{y})^{T}
 \end{equation}
- where $(p_{x}, p_{y})^{T}$ are the coordinates of the new optical center. So according to this mapping can be expressed as:
+ where $(p_{x}, p_{y})^{T}$ are the coordinates of the new optical center. So according to this mapping can be expressed as \cite{10.5555/861369}:
    \begin{equation}
 \left(\begin{array}{c}X \\ Y \\ Z \\ 1 \end{array}\right) \rightarrow \left(\begin{array}{c} fX + Zp_{x} \\ fY + Zp_{y} \\ Z \end{array}\right) = \begin{bmatrix}f & &p_{x} & 0 \\  &f &p_{y} & 0  \\   & &1 & 0   \end{bmatrix}\left(\begin{array}{c}X\\ Y  \\Z \\ 1 \end{array}\right)
 \end{equation}
 \begin{equation}
-And  K =  \begin{bmatrix}f & &p_{x} \\  &f &p_{y}  \\   & &1    \end{bmatrix}
+K =  \begin{bmatrix}f & &p_{x} \\  &f &p_{y}  \\   & &1    \end{bmatrix}
 \end{equation}
  Here K is called the camera calibration matrix. The 3D world point is generally in the world coordinate frame and in most cases, there exists some rotation and translation between the camera coordinate frame and world coordinate frame.
  
@@ -126,11 +126,11 @@ K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0
     
     \section{Hough Transform}
     
-    The Hough Transform is a feature extraction technique used in image analysis, computer vision, and digital image processing. The purpose of the technique is to find imperfect instances of objects within a certain class of shapes by a voting procedure. \footnote{\url{https://en.wikipedia.org/wiki/Hough_transform}}
+    The Hough Transform is a feature extraction technique used in image analysis, computer vision, and digital image processing\footnote{\url{https://en.wikipedia.org/wiki/Hough_transform}}. The purpose of the technique is to find imperfect instances of objects within a certain class of shapes by a voting procedure\footnote{\url{https://en.wikipedia.org/wiki/Hough_transform}}. 
     
     Generally, Hough Transform is used for detecting lines in an image but it is also applicable to detecting circles and ellipsoidal curves in an image. Hough transform is applied to images after edge detection is performed on them. Edge detection is a technique that identifies boundaries or edges of certain objects in the image based on the change in brightness across the pixels. Let's assume we are trying to find lines in an image, in that sense edges, are a sequence of pixels with certain slopes and intercepts. To detect lines in this image we need to loop through all the pixels with the same intercept and slope, this is where Hough transforms comes in handy. In simple words, Hough Transform helps to find lines by giving weightage to the pixels that are already in a line. 
     
-    Before indulging in the working of the Hough Transform, we need to understand the basic idea of how the Hough Transform works. A line can be represented by minimal two points and it has an intercept and a slope. Similarly, a line can also be represented by a single point in mc space.
+    Before indulging in the working of the Hough Transform, we need to understand the basic idea of how the Hough Transform works. Any line in the Euclidean space is defined by minimal two points and it has a slope and an intercept. Similarly, any line in Eucledian space is defined by a point in mc space.
     
                 \begin{figure}[h]
     \centering
@@ -154,7 +154,7 @@ K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0
     \caption{Representation of a set of points}
     \end{figure}
     
-    We can not represent lines with slope and intercept in Hough space algorithmically, as in the case of vertical lines the slope can be undefined or infinity. Therefore the straight line is represented in the form of polar coordinates, $\rho = xcos(\theta) + ysin(\theta) $ is the equation of the normal line where $\rho$ is the length of the normal line and $\theta$ is the angle between the normal line and the x-axis. 
+    We can not represent lines with slope and intercept in Hough space algorithmically because the slope of vertical line is undefined or infinity. Therefore the straight line is represented in the form of polar coordinates, $\rho = xcos(\theta) + ysin(\theta) $, where $\rho$ is the length of the normal line and $\theta$ is the angle between the normal line and the x-axis \cite{hough1001} . 
     
     \begin{figure}[h]
     \centering
@@ -162,14 +162,14 @@ K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0
     \caption{Representation of line in the normal form}
     \end{figure}
     
-     Every point is represented by cosine curves in the Hough space, thus we can map all the edge points from an edge image to Hough space. If two points lie on the same edge or line their cosine curves will intersect at some $(\rho,\theta)$ pair, as mentioned above the Hough transform algorithm will find the $(\rho,\theta)$ pair for which the number of intersections is larger than a certain threshold. \newline 
+     A point is defined by cosine curves within the Hough space, thus all the points in an edge image can be transformed into Hough space. If two points lie on the same edge or line their cosine curves will intersect at some $(\rho,\theta)$ pair, as mentioned above the Hough transform algorithm will find the $(\rho,\theta)$ pair for which the number of intersections is larger than a certain threshold\cite{hough1001}. \newline 
     
     
     \underline{\textbf{Algorithm:}} \newline
     \textbf{1.} Assuming the origin of the image is at the top left corner and decide the range of $\rho$ and $\phi$. In most of the cases, $\theta:[0, 180]$ degrees and $\rho:[-d,d]$ where d is the length of the diagonal of the edge image. \newline
     \textbf{2.} Initialize an array called an accumulator with dimension $(number of rhos, and number of thetas)$ which are sampled over a specific interval. \newline
     \textbf{3.} Edge detection is carried out on the image before performing Hough transform.\newline 
-    \textbf{4.} Loop through the pixels of the edge image and check if that pixel is an edge pixel. In case, if it is an edge pixel we loop through all the values of $\theta$ and obtain the corresponding $\rho$. For every $(\rho, \theta)$ pair while looping we increment the value in the accumulator at the particular index of $\rho$ and $\theta$. \newline
+    \textbf{4.} Loop through all the pixels of an edge image and check if that pixel belongs to an edge. In case, if it belongs to an edge we loop through all the values of $\theta$ and compute $\rho$. For every $(\rho, \theta)$ pair while looping we increment the value in the accumulator at the particular index of $\rho$ and $\theta$. \newline
     \textbf{5.} To obtain the detected lines, the values in the accumulator are checked and for a respective $(\rho,\theta)$ pair the value is greater than some threshold it is considered as a line, where $(\rho,\theta)$ pair can be mapped to Cartesian space.  
     
     \section{A Brief Guide to Convolutional Neural Networks}
@@ -218,7 +218,7 @@ K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0
       \begin{figure}[h]
     \centering
     \includegraphics[width=10cm, height =2cm]{images/cnn_case3.png}
-    \caption{$3x3$ kernel convolves over $5x5$ input with $1x1$ padding and unit strides \cite{https://doi.org/10.48550/arxiv.1603.07285}}
+    \caption{$3x3$ kernel convolves \cite{https://doi.org/10.48550/arxiv.1603.07285} over $5x5$ input with $1x1$ padding and unit strides }
     \end{figure}
     
     
@@ -227,17 +227,17 @@ K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0
       \begin{figure}[h]
     \centering
     \includegraphics[width=10cm, height =2cm]{images/cnn_case5.png}
-    \caption{Convolving $3x3$ kernel over $5x5$ input with no padding and $2x2$ strides \cite{https://doi.org/10.48550/arxiv.1603.07285}}
+    \caption{Convolving $3x3$ \cite{https://doi.org/10.48550/arxiv.1603.07285} kernel over $5x5$ input with no padding and $2x2$ strides }
     \end{figure}
      
-   There can be more variants depending on the choice of stride and padding. kernel size. Assuming the input feature map to be square the resulting spatial size of the output feature map after convolution can be calculated by:
-   \begin{center}
+   There can be more variants depending on the choice of stride and padding. kernel size. Assuming the input feature map to be square the resulting spatial size of the output feature map after convolution can be calculated by \cite{https://doi.org/10.48550/arxiv.1603.07285}:
+   \begin{equation}
       output size = (input size - kernel size + 2 * padding / stride) + 1
-   \end{center}
+   \end{equation}
    
    
    
-   Sometimes there are cases when we want to up-sample the feature map thus increasing the spatial size of the feature map, such kinds of convolutions are generally used in the decoding layers of the auto-encoder to map the feature maps to high dimensional space such convolutions are called as transposed convolutions or deconvolutions. It can be seen as mathematically opposite to the normal convolution. Deconvolution can be performed by padding the feature map or sometimes zeros are added in the middle of the inputs along with padding to increase the spatial size of the feature map. \newline
+   Sometimes there are cases when we want to up-sample the feature map thus increasing the spatial size of the feature map, such kinds of convolutions are generally used in the decoding layers of the auto-encoder to map the feature maps to high dimensional space such convolutions are called as transposed convolutions or deconvolutions. It can be seen as mathematically opposite to the normal convolution. Deconvolution can be performed by padding the feature map or sometimes zeros are added in the middle of the inputs to increase the spatial size of the feature map. \newline
   
     \textbf{Example 1:  2x2 padding,  unit strides}
      \begin{figure}[h]
@@ -253,7 +253,7 @@ K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0
     \caption{Transpose of convolving $3x3$ kernel on $5x5$ input with 2x2 strides \cite{https://doi.org/10.48550/arxiv.1603.07285}}
     \end{figure}
     
-    More variants of the transpose convolutions can be obtained with different settings of padding, dilation, stride and kernel size. Assuming the input feature map to be square the resulting spatial size of the output feature map after deconvolution can be calculated by:
+    More variants of the transpose convolutions can be obtained with different settings of padding, dilation, stride and kernel size. Assuming the input feature map to be square the resulting spatial size of the output feature map after deconvolution can be calculated by \cite{https://doi.org/10.48550/arxiv.1603.07285}:
     
        \begin{center}\newline
        output size = (input size - 1) * stride - 2 * padding + (kernel size - 1) +1
@@ -268,26 +268,26 @@ K =  \begin{bmatrix} \alpha_{x} & s &c_{x} \\  0 & \alpha_{y} & c_{y}  \\  0  &0
     2. Localization : find the location of the object in the image \newline
     3. Segmentation : divide the pixels into groups and obtaining a mask around those pixels groups 
     
-     When CNN's are used for object recognition task they decrease the size of the feature maps from initial layer to deeper layers and semantic segmentation is a dense prediction task, means the spatial size of the output should be same as the input, it makes this task a little bit challenging. In most of the cases direct up-sampling of the mid level feature maps leads to coarse results and thus to obtain fine results we need to increase the effective receptive field which is generally done via artous convolutions which enhance the receptive field. 
+     When CNN's are used for object recognition task they decrease the size of the feature maps from initial layer to deeper layers and semantic segmentation is considered as a dense prediction task, means the spatial size of the output should be same as the input, it makes this task a little bit challenging. In most of the cases direct up-sampling of the mid level feature maps leads to coarse results and thus to obtain fine results we need to increase the effective receptive field which is generally done via artous convolutions which enhance the receptive field. 
      
      There exists three variants segmentation: \newline
      1. Semantic Segmentation \newline
      2. Instance Segmentation \newline
      3. Panoptic Segmentation \newline 
      
-     To understand conceptually the above mentioned types, let's first understand briefly the  2D object detection. The task of object detection generally is to localise the object in the image and draw bounding boxes around it and every box generally have a confidence score. So, the object detection pipeline outputs object class, it's bounding box location with respect to a coordinate system and a confidence score. 
+     To understand conceptually the above mentioned types, let's first understand briefly the  2D object detection. Object detection localise the object in the image and draw bounding boxes around it and every box generally have a confidence score. So, the object detection pipeline outputs object class, it's bounding box location with respect to a coordinate system and a confidence score. 
      
      Instance segmentation takes the task of object detection to next level, alternatively predicting the class labels of the object, it's bounding box location and confidence score. The algorithm also predicts the pixels which belongs to that instance or object which is generally represented as 2d array with values either 0 or 1 called as binary mask. 
      
      Similarly semantic segmentation does not care about the individual instance, it is responsible for only obtaining class labels for each pixel even if it belongs to the same instances, thus individual instance are not accounted in this case. 
 
-     Where as panoptic segmentation can be seen as the combination of instance and semantic segmentation where the algorithm predicts class labels for every pixel along with identifying the individual instances it belongs too. 
+     Where as panoptic segmentation is the combination of semantic and instance segmentation in which the algorithm predicts class labels for every pixel along with identifying the individual instances it belongs too. 
     \newline
     The ability of this method to obtain the meaningful semantic information from the scene like pedestrians, cars, cycles and more, makes it highly applicable for scene understanding and which further facilitates the prediction of action decisions for an autonomous driving car.  
     
      \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth, height =10cm]{images/seg_image101.png}
-    \caption{ Semantic segmentation, instance segmentation and panoptic segmentation of a driving scene \cite{8570006}}
+    \caption{ \cite{8570006} (a) Semantic segmentation, (b) instance segmentation and (c) panoptic segmentation of a driving scene }
     \end{figure}
 \end{document}
