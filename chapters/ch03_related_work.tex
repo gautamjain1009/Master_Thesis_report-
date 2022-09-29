@@ -100,7 +100,7 @@ The most seminal paper in the field of 3D lane detection is \cite{DBLP:journals/
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{images/3dlanenet.png}
-    \caption{\cite{c} 3D LanetNet network architecture}
+    \caption{\cite{DBLP:journals/corr/abs-1811-10203} 3D LanetNet network architecture}
     \end{figure}
 
 \cite{DBLP:journals/corr/abs-2011-01535} handles the limitations of \cite{DBLP:journals/corr/abs-1811-10203} and like its predecessor, it has also similar dual pathways but the only difference is the representation of the lane lines. It breaks the BEV image into grids called image tiles.
@@ -155,7 +155,7 @@ This section introduces the reader to popular 2D and 3D public lane detection da
 As a lot of research has been carried in the area of 2D lane detection therefore a lot of 2d lane detection data sets exist. But in this work, we will discuss only the prominent ones which are generally used by the 3D lane detection approaches for training the intermediate part of their pipeline. \cite{Tusimple} TuSimple is one of the most basic datasets used by the 2d lane detection approaches to validate their pipeline. The dataset consists of driving scenarios on the highway with stable lighting conditions. Whereas CULane \cite{pan2018SCNN} is quite a challenging dataset with varying driving conditions. The dataset consists of 55 hours of driving in crowded streets of Beijing with scenarios ranging from no lane marking, crowded streets, sun glares, night, intersections, curves and more. The only drawback of this dataset is that it does not contain scenes with varying weather conditions.
 
 \subsubsection{3D Lane Detection Datasets}
-Apollo Synthetic datset\cite{guo2020gen} is one of the first public 3D lane detection dataset. As the name suggests there exist annotations for 3d lane line points in the simulation. The dataset is captured from the real world maps with three different driving terrains like highway, urban and residential with different lighting conditions depending on the daytime. The dataset is composed of real-world 3D lane line points, camera poses in terms of camera height and pitch, camera intrinsics, RGB image, dense depth image, and semantically segmented images of the scene.
+Apollo Synthetic dataset\cite{guo2020gen} is one of the first public 3D lane detection dataset. As the name suggests there exist annotations for 3d lane line points in the simulation. The dataset is captured from the real world maps with three different driving terrains like highway, urban and residential with different lighting conditions depending on the daytime. The dataset is composed of real-world 3D lane line points, camera poses in terms of camera height and pitch, camera intrinsics, RGB image, dense depth image, and semantically segmented images of the scene.
 
 OpenLane \cite{chen2022persformer} is one of the first real-world 3d lane datasets. The dataset is basically generated from the Waymo open dataset \cite{Sun_2020_CVPR}, where they have provided input images of the scene, the closest in path object information, and 3D lane annotations. In addition to all the preliminary driving scenarios, the dataset also contains diving scenarios with complex topologies like intersections and roundabouts. Data also contains annotations for the opposite lanes if there exist no curbs in the middle of the lane. 
 
